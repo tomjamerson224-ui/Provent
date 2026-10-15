@@ -1,0 +1,27 @@
+---
+import { ShieldCheck, BadgeCheck, Award } from "@lucide/astro";
+import { commitments } from "@/data/site";
+import SectionHeading from "./SectionHeading.astro";
+
+const icons = [ShieldCheck, BadgeCheck, Award];
+---
+
+<section class="py-16 sm:py-24">
+  <div class="container-page">
+    <SectionHeading eyebrow="Committed to your comfort" title="Trusted climate partners for Perth homes & businesses" align="center" />
+    <div class="mt-12 grid gap-10 md:grid-cols-3">
+      {commitments.map((c, i) => {
+        const Icon = icons[i];
+        return (
+          <div class="text-center">
+            <span class="mx-auto flex size-14 items-center justify-center rounded-2xl bg-accent text-brand-dark">
+              <Icon class="size-7" />
+            </span>
+            <h3 class="mt-5 text-xl font-semibold">{c.title}</h3>
+            <p class="mx-auto mt-2 max-w-xs leading-relaxed text-muted-foreground">{c.body}</p>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>

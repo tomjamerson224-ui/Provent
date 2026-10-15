@@ -1,0 +1,53 @@
+---
+import { Image } from "astro:assets";
+import { Mail, Phone, Clock, MapPin } from "@lucide/astro";
+import { business, footerLinks, systems } from "@/data/site";
+import logoBadge from "@/assets/images/logo-badge.png";
+import logoWordmark from "@/assets/images/logo-wordmark.avif";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="bg-ink pb-20 text-ink-muted md:pb-0">
+  <div class="container-page grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
+    <div class="max-w-sm">
+      <a href="/" class="flex items-center gap-2.5" aria-label="ProVent Air Conditioning — home">
+        <Image src={logoBadge} alt="" width={48} height={48} class="size-12 rounded-full ring-1 ring-white/20" />
+        <Image src={logoWordmark} alt="ProVent Air Conditioning" width={180} class="h-11 w-auto" />
+      </a>
+      <p class="mt-5 text-sm leading-relaxed">
+        Family-owned and Perth-based. We deliver honest advice, quality installs and reliable service — on time and on budget.
+      </p>
+    </div>
+
+    <nav aria-label="Helpful links">
+      <h2 class="text-sm font-semibold tracking-wide text-white uppercase">Helpful links</h2>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        {footerLinks.map((l) => <li><a href={l.href} class="transition-colors hover:text-brand">{l.title}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-label="Systems">
+      <h2 class="text-sm font-semibold tracking-wide text-white uppercase">Systems</h2>
+      <ul class="mt-4 space-y-2.5 text-sm">
+        {systems.map((s) => <li><a href={s.href} class="transition-colors hover:text-brand">{s.title}</a></li>)}
+      </ul>
+    </nav>
+
+    <div>
+      <h2 class="text-sm font-semibold tracking-wide text-white uppercase">Contact us today</h2>
+      <ul class="mt-4 space-y-3 text-sm">
+        <li><a href={business.phoneHref} class="flex items-center gap-2.5 text-lg font-semibold text-white hover:text-brand"><Phone class="size-4 text-brand" />{business.phone}</a></li>
+        <li><a href={business.emailHref} class="flex items-center gap-2.5 break-all hover:text-brand"><Mail class="size-4 shrink-0 text-brand" />{business.email}</a></li>
+        <li class="flex items-center gap-2.5"><Clock class="size-4 shrink-0 text-brand" />{business.hours}</li>
+        <li class="flex items-center gap-2.5"><MapPin class="size-4 shrink-0 text-brand" />Servicing all of Perth, WA</li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="container-page flex flex-col gap-2 py-5 text-xs sm:flex-row sm:items-center sm:justify-between">
+      <p>© {year} {business.name}. All rights reserved.</p>
+      <p>Licensed &amp; ARCtick certified refrigeration mechanics</p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,54 @@
+---
+import { getImage } from "astro:assets";
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import ProjectsGallery, { type GalleryProject } from "@/components/ProjectsGallery.tsx";
+import { projects, categoryLabels, type SystemCategory } from "@/data/projects";
+import heroImg from "@/assets/images/banner-van.webp";
+
+const gallery: GalleryProject[] = await Promise.all(
+  projects.map(async (p) => {
+    const img = await getImage({ src: p.image, widths: [400, 640, 800], width: 800, format: "webp" });
+    return {
+      slug: p.slug,
+      title: p.title,
+      subtitle: p.subtitle,
+      categories: p.categories,
+      categoryLabels: p.categories.map((c) => categoryLabels[c]),
+      image: {
+        src: img.src,
+        srcSet: img.srcSet.attribute,
+        width: Number(img.attributes.width ?? 800),
+        height: Number(img.attributes.height ?? 600),
+        alt: p.imageAlt,
+      },
+    };
+  }),
+);
+
+const filters = (Object.keys(categoryLabels) as SystemCategory[]).map((value) => ({
+  value,
+  label: categoryLabels[value],
+}));
+---
+
+<Layout
+  title="Our Work — Recent Air Conditioning Installs"
+  description="Recent ducted, split system and evaporative air conditioning installs by ProVent across Perth — homes, renovations and local businesses."
+>
+  <PageHero
+    eyebrow="Our work"
+    title="Recent installs around Perth."
+    lead="Clean, careful work on homes, renovations and local businesses — here's a look at some recent jobs."
+    image={heroImg}
+    imageAlt="ProVent technician walking to the branded work van"
+    focus="60% center"
+  />
+  <section class="py-14 sm:py-20">
+    <div class="container-page">
+      <ProjectsGallery client:visible projects={gallery} filters={filters} />
+    </div>
+  </section>
+  <QuoteBand title="Want results like these?" />
+</Layout>

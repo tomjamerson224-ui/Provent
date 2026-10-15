@@ -1,0 +1,78 @@
+---
+import "@/styles/global.css";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import MobileCallBar from "@/components/MobileCallBar.astro";
+import { business } from "@/data/site";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Absolute or root-relative image for social cards. */
+  ogImage?: string;
+  noindex?: boolean;
+}
+
+const { title, description, ogImage = "/og-default.png", noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = title.includes(business.shortName) ? title : `${title} | ${business.name}`;
+
+const localBusiness = {
+  "@context": "https://schema.org",
+  "@type": "HVACBusiness",
+  name: business.name,
+  url: business.url,
+  telephone: "+61420496791",
+  email: business.email,
+  image: new URL("/icon-512.png", Astro.site).toString(),
+  logo: new URL("/icon-512.png", Astro.site).toString(),
+  areaServed: { "@type": "City", name: "Perth" },
+  address: { "@type": "PostalAddress", addressLocality: "Perth", addressRegion: "WA", addressCountry: "AU" },
+  openingHours: "Mo-Su 00:00-23:59",
+  priceRange: "$$",
+};
+---
+
+<!doctype html>
+<html lang="en-AU">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#191c1e" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site)} />
+    <meta property="og:locale" content="en_AU" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-brand focus:px-3 focus:py-2 focus:text-ink">Skip to content</a>
+    <SiteHeader />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <SiteFooter />
+    <MobileCallBar />
+  </body>
+</html>

@@ -1,0 +1,27 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import SizeCalculator from "@/components/SizeCalculator.tsx";
+import SystemPicker from "@/components/sections/SystemPicker.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import { business } from "@/data/site";
+---
+
+<Layout
+  title="Split System Size Calculator"
+  description="Work out what size split system air conditioner your room needs. Enter room size, ceiling height, sun and insulation for a quick kW estimate from ProVent, Perth."
+>
+  <section class="bg-ink py-12 text-white sm:py-16">
+    <div class="container-page max-w-3xl text-center">
+      <p class="eyebrow !text-brand">Split system size calculator</p>
+      <h1 class="mt-3 text-4xl font-extrabold sm:text-5xl">What size split system do I need?</h1>
+      <p class="mt-4 text-lg text-white/80">Targeted comfort, fast install. Pop in your room details for a quick estimate.</p>
+    </div>
+  </section>
+  <section class="bg-muted py-12 sm:py-16">
+    <div class="container-page">
+      <SizeCalculator client:load phoneHref={business.phoneHref} />
+    </div>
+  </section>
+  <SystemPicker />
+  <QuoteBand />
+</Layout>

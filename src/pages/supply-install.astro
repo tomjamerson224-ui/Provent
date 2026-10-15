@@ -1,0 +1,78 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import FeatureSplit from "@/components/sections/FeatureSplit.astro";
+import HowWeWork from "@/components/sections/HowWeWork.astro";
+import SystemPicker from "@/components/sections/SystemPicker.astro";
+import ProjectGrid from "@/components/sections/ProjectGrid.astro";
+import Commitments from "@/components/sections/Commitments.astro";
+import BrandStrip from "@/components/sections/BrandStrip.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import { projects } from "@/data/projects";
+
+import heroImg from "@/assets/images/banner-consultation.webp";
+import roofImg from "@/assets/images/ducting-roof-space.webp";
+import techImg from "@/assets/images/tech-outdoor-unit-3.webp";
+
+const steps = [
+  {
+    title: "Request an instant quote",
+    body: "Tell us what you need to cool or heat and we'll send a quick price estimate and schedule a visit — no pressure.",
+  },
+  {
+    title: "Measure & design",
+    body: "We'll come by to measure your space and plan a system that fits your comfort and budget. You'll get a clear quote before we start.",
+  },
+  {
+    title: "Remove the old unit",
+    body: "If you have an old system we'll safely take it out and clean up, so the new unit goes in without a mess.",
+  },
+  {
+    title: "Install & hand over",
+    body: "We set everything up neatly, make sure it works properly and connect any Wi-Fi controls. Then we pack up and leave everything tidy.",
+  },
+];
+
+const promise = [
+  {
+    title: "Every job, every budget",
+    body: "Whether it's a single room or a whole building — including older homes and high-rise structures — we deliver top-quality work without compromise.",
+  },
+  {
+    title: "Installation & warranty",
+    body: "You get a 3-year warranty on our installation and a 5-year warranty on the equipment we provide.",
+  },
+  {
+    title: "Customer support",
+    body: "Clear quotes with no hidden fees, and a team of professionals who stand behind their work long after the tools are packed away.",
+  },
+];
+---
+
+<Layout
+  title="Air Conditioning Supply & Install Perth"
+  description="New ducted, split system and evaporative air conditioning supplied and installed across Perth. Measure, design, old-unit removal and a tidy install with a 3-year workmanship warranty."
+>
+  <PageHero
+    eyebrow="Supply & install"
+    title="New systems, done right."
+    lead="From the first measure to the final clean-up, we design and install air conditioning that suits your home, your lifestyle and your budget."
+    image={heroImg}
+    imageAlt="ProVent technician reviewing a system design with a homeowner on a laptop"
+    focus="70% center"
+  />
+
+  <FeatureSplit eyebrow="How it happens" title="How we make your new air-con happen" items={steps} image={roofImg} imageAlt="New ducting installed through an open roof frame" />
+
+  <SystemPicker />
+
+  <FeatureSplit muted reverse eyebrow="Our promise & warranty" title="Quality you can count on" items={promise} image={techImg} imageAlt="ProVent technician installing an outdoor unit beside a Perth home" />
+
+  <HowWeWork />
+
+  <ProjectGrid title="Our recent installs" projects={projects} muted={false} />
+
+  <BrandStrip />
+  <Commitments />
+  <QuoteBand />
+</Layout>

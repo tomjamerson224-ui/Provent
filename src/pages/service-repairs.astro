@@ -1,0 +1,95 @@
+---
+import { Image } from "astro:assets";
+import { Phone } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import FeatureSplit from "@/components/sections/FeatureSplit.astro";
+import BenefitGrid from "@/components/sections/BenefitGrid.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
+import BrandStrip from "@/components/sections/BrandStrip.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { business, whyProVent } from "@/data/site";
+
+import heroImg from "@/assets/images/banner-tech-gauges.webp";
+import portraitImg from "@/assets/images/tech-service-portrait.avif";
+import imgBreakdown from "@/assets/images/tech-crouched-unit.avif";
+import imgDiagnostics from "@/assets/images/tech-diagnostics.avif";
+import imgAirflow from "@/assets/images/homeowner-controller.avif";
+import imgLeak from "@/assets/images/split-water-leak.webp";
+import imgNoise from "@/assets/images/tech-inspecting-unit.webp";
+import imgGas from "@/assets/images/tech-gauges.webp";
+
+const promises = [
+  {
+    title: "Available 24/7 for urgent call-outs",
+    body: "Our goal is to get to you the same day you call and have your system working again. We know being without it makes home or work uncomfortable and stressful.",
+  },
+  {
+    title: "All brands, all models",
+    body: "Split systems, ducted systems, multi-head units — we handle them all, including the older ones some companies won't touch.",
+  },
+  {
+    title: "Up-front quotes",
+    body: "Before any work starts you'll get a clear quote, so you know exactly what it will cost. No surprises when the bill arrives.",
+  },
+];
+
+const faults = [
+  { title: "Emergency breakdowns", body: "Unit dead or tripping breakers? We'll get it running fast.", image: imgBreakdown, alt: "Technician crouched beside an outdoor unit with gauges connected" },
+  { title: "System diagnostics", body: "Full fault-finding to pinpoint inefficiencies and hidden errors.", image: imgDiagnostics, alt: "Technician testing an outdoor unit with a multimeter" },
+  { title: "Airflow & temperature problems", body: "Weak air, uneven temps, or rooms not heating or cooling.", image: imgAirflow, alt: "Homeowner adjusting a wall-mounted air conditioning controller" },
+  { title: "Water leaks", body: "Drips, pooling water or overflow alarms.", image: imgLeak, alt: "Water dripping from a wall-mounted split system" },
+  { title: "Strange noises", body: "Buzzing, rattling, or squealing fans and compressors.", image: imgNoise, alt: "Technician inspecting underneath an outdoor unit" },
+  { title: "Refrigerant gas leaks", body: "Lost cooling power, ice-ups or high energy bills.", image: imgGas, alt: "Technician connecting refrigerant gauges to an outdoor unit" },
+];
+---
+
+<Layout
+  title="Air Conditioner Service & Repairs Perth"
+  description="24/7 air conditioning repairs in Perth. All brands and models — split, ducted and multi-head. Up-front quotes, same-day call-outs where possible. Call ProVent on 0420 496 791."
+>
+  <PageHero
+    eyebrow="Service & repairs"
+    title="Fast air-con fixes, 24/7."
+    lead="Urgent breakdown or annual maintenance — we keep Perth homes and businesses running smoothly all year round."
+    image={heroImg}
+    imageAlt="ProVent technician checking refrigerant pressures on an outdoor unit"
+    focus="25% center"
+    callLabel="Urgent? Call now"
+  />
+
+  <FeatureSplit eyebrow="Air-con service & repairs" title="Here when your system isn't" items={promises} image={portraitImg} imageAlt="ProVent technician working on an air conditioning unit" callLabel="Urgent? Call now" />
+
+  <section class="bg-muted py-16 sm:py-24">
+    <div class="container-page">
+      <SectionHeading eyebrow="What we fix" title="Common problems we solve every week" align="center" />
+      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {faults.map((f) => (
+          <article class="group overflow-hidden rounded-2xl bg-card shadow-sm">
+            <div class="aspect-[4/3] overflow-hidden">
+              <Image src={f.image} alt={f.alt} widths={[400, 640]} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" class="size-full object-cover transition-transform duration-500 group-hover:scale-105" />
+            </div>
+            <div class="p-5">
+              <h3 class="text-lg font-semibold">{f.title}</h3>
+              <p class="mt-1 text-muted-foreground">{f.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <BenefitGrid eyebrow="Why choose ProVent" title="Local, experienced and easy to deal with" items={whyProVent} />
+  <BrandStrip />
+
+  <section class="bg-ink py-16 text-white sm:py-20">
+    <div class="container-page flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
+      <div class="max-w-2xl">
+        <p class="eyebrow !text-brand">Book your emergency repair</p>
+        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Help is available day or night.</h2>
+        <p class="mt-3 text-lg text-ink-muted">Clear pricing, no hidden fees. Call and we'll send a licensed technician to make your home comfortable again — today.</p>
+      </div>
+      <LinkButton href={business.phoneHref} size="xl" class="h-14 px-8 text-lg"><Phone class="size-5" />{business.phone}</LinkButton>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,27 @@
+---
+import { ArrowRight, Phone } from "@lucide/astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { business } from "@/data/site";
+
+interface Props {
+  title?: string;
+  lead?: string;
+}
+const {
+  title = "Request your free quote",
+  lead = "Perth's air conditioning experts are ready to help you find energy-efficient, affordable options. Ask now and we'll come back with a personalised price — same day.",
+} = Astro.props;
+---
+
+<section class="bg-brand py-14 text-ink sm:py-16">
+  <div class="container-page flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+    <div class="max-w-2xl">
+      <h2 class="text-3xl font-extrabold sm:text-4xl">{title}</h2>
+      <p class="mt-3 text-lg text-ink/80">{lead}</p>
+    </div>
+    <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
+      <LinkButton href="/request-a-quote" size="xl" class="bg-ink text-white hover:bg-ink/85">Get a free quote <ArrowRight class="size-4" /></LinkButton>
+      <LinkButton href={business.phoneHref} size="xl" variant="outline" class="border-ink/25 bg-transparent hover:bg-ink/10"><Phone class="size-4" />{business.phone}</LinkButton>
+    </div>
+  </div>
+</section>

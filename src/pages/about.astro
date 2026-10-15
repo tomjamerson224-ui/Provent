@@ -1,0 +1,91 @@
+---
+import { Image } from "astro:assets";
+import { HeartHandshake, Award, BadgeCheck } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import FeatureSplit from "@/components/sections/FeatureSplit.astro";
+import HowWeWork from "@/components/sections/HowWeWork.astro";
+import Commitments from "@/components/sections/Commitments.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
+
+import heroImg from "@/assets/images/banner-handover.webp";
+import clientImg from "@/assets/images/tech-with-client.webp";
+import approachImg from "@/assets/images/tech-outdoor-unit-2.webp";
+import vanImg from "@/assets/images/tech-van.webp";
+
+const whyUs = [
+  {
+    title: "Family-owned expertise",
+    body: "We're a Perth-based, family-owned business run by Matt and his local team of certified refrigeration mechanics. With over ten years of experience, we've earned trust right across Western Australia.",
+  },
+  {
+    title: "Tailored solutions",
+    body: "We assess every site and use the latest energy-efficient technology to design systems that fit your space, budget and lifestyle. Every installation comes with a 3-year warranty on our work and a 5-year warranty on the products we use.",
+  },
+  {
+    title: "Quality assurance",
+    body: "When you choose ProVent you deal directly with the technicians who plan, install and maintain your system. Expect clear communication, honest pricing, clean work sites and a real commitment to your comfort.",
+  },
+];
+
+const pillars = [
+  { icon: HeartHandshake, title: "Outstanding customer care" },
+  { icon: Award, title: "10+ years of expertise" },
+  { icon: BadgeCheck, title: "Certified, highly skilled technicians" },
+];
+---
+
+<Layout
+  title="About Us"
+  description="ProVent Air Conditioning is a family-owned Perth business led by Matt and a team of certified refrigeration mechanics. 10+ years experience, 3-year workmanship warranty."
+>
+  <PageHero
+    eyebrow="About ProVent"
+    title="Family-owned. Perth-based. Built on honest advice."
+    lead="For more than ten years we've designed and installed air conditioning for Perth homes and businesses — on schedule, seamlessly, and built for lasting comfort."
+    image={heroImg}
+    imageAlt="ProVent technician handing over to a homeowner beside the work van"
+    focus="70% center"
+  />
+
+  <section class="border-b bg-white">
+    <ul class="container-page grid gap-px sm:grid-cols-3">
+      {pillars.map(({ icon: Icon, title }) => (
+        <li class="flex items-center gap-3 py-6 sm:justify-center">
+          <Icon class="size-6 text-brand-dark" />
+          <span class="font-semibold">{title}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <FeatureSplit eyebrow="Why choose us" title="The same team from first quote to final handover" items={whyUs} image={clientImg} imageAlt="ProVent technician talking through a quote with a homeowner" />
+
+  <section class="bg-muted py-16 sm:py-24">
+    <div class="container-page grid gap-6 md:grid-cols-2">
+      <article class="overflow-hidden rounded-2xl bg-card shadow-sm">
+        <Image src={approachImg} alt="ProVent technician servicing an outdoor unit" widths={[480, 800]} sizes="(min-width: 768px) 45vw, 100vw" class="aspect-[16/10] w-full object-cover object-top" />
+        <div class="p-6 sm:p-8">
+          <SectionHeading eyebrow="Approach" title="Every home is different" />
+          <p class="mt-4 leading-relaxed text-muted-foreground">
+            Every home and office has its own needs, so we customise air conditioning solutions for you. You'll have the same technician guiding you through the entire process.
+          </p>
+        </div>
+      </article>
+      <article class="overflow-hidden rounded-2xl bg-card shadow-sm">
+        <Image src={vanImg} alt="ProVent technician with tool bag beside the company van" widths={[480, 800]} sizes="(min-width: 768px) 45vw, 100vw" class="aspect-[16/10] w-full object-cover object-[center_30%]" />
+        <div class="p-6 sm:p-8">
+          <SectionHeading eyebrow="Commitment" title="Backed long after the tools are packed" />
+          <p class="mt-4 leading-relaxed text-muted-foreground">
+            We offer a 5-year product warranty and a 3-year guarantee on our work, so any issue is resolved promptly at no extra cost. Trust us for reliable quality and comfort.
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <HowWeWork />
+  <Commitments />
+  <QuoteBand title="Your local air conditioning specialists" />
+</Layout>

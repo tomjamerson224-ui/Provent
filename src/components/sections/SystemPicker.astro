@@ -1,0 +1,40 @@
+---
+import { Image } from "astro:assets";
+import { ArrowRight } from "@lucide/astro";
+import { systems } from "@/data/site";
+import SectionHeading from "./SectionHeading.astro";
+
+interface Props {
+  /** href of the current system page — it's left out of the list. */
+  current?: string;
+}
+const { current } = Astro.props;
+const list = systems.filter((s) => s.href !== current);
+---
+
+<section class="py-16 sm:py-24">
+  <div class="container-page">
+    <SectionHeading
+      eyebrow="Pick your perfect system"
+      title={current ? "Other systems we install" : "Ducted, split or evaporative?"}
+      lead="Not sure which suits your home? We'll give you straight, honest advice — that's what we're here for."
+      align="center"
+    />
+    <div class:list={["mt-12 grid gap-5", list.length === 3 ? "md:grid-cols-3" : "mx-auto max-w-4xl md:grid-cols-2"]}>
+      {list.map((s) => (
+        <a href={s.href} class="group flex flex-col rounded-2xl border bg-card p-6 transition hover:-translate-y-1 hover:border-brand hover:shadow-lg">
+          {s.icon && (
+            <span class="flex size-24 items-center justify-center rounded-xl bg-muted p-3">
+              <Image src={s.icon} alt="" width={160} class="size-full object-contain" />
+            </span>
+          )}
+          <h3 class="mt-5 text-xl font-semibold">{s.title}</h3>
+          <p class="mt-2 flex-1 text-muted-foreground">{s.description}</p>
+          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-dark">
+            Learn more <ArrowRight class="size-4 transition-transform group-hover:translate-x-1" />
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

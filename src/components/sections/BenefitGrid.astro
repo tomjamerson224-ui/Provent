@@ -1,0 +1,29 @@
+---
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import SectionHeading from "./SectionHeading.astro";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  items: { title: string; body: string }[];
+}
+const { eyebrow, title, lead, items } = Astro.props;
+---
+
+<section class="bg-muted py-16 sm:py-24">
+  <div class="container-page">
+    <SectionHeading eyebrow={eyebrow} title={title} lead={lead} align="center" />
+    <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {items.map((item, i) => (
+        <Card className="h-full border-0 shadow-sm transition-shadow hover:shadow-md">
+          <CardHeader>
+            <span class="font-display text-sm font-bold text-brand-dark">{String(i + 1).padStart(2, "0")}</span>
+            <CardTitle className="text-lg font-semibold">{item.title}</CardTitle>
+          </CardHeader>
+          <CardContent className="text-[0.95rem] leading-relaxed text-muted-foreground">{item.body}</CardContent>
+        </Card>
+      ))}
+    </div>
+  </div>
+</section>

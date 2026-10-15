@@ -1,0 +1,18 @@
+---
+import type { VariantProps } from "class-variance-authority";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+// shadcn's <Button asChild> can't merge its props onto children passed from
+// an .astro file (they arrive wrapped in <astro-slot>), so static links in
+// Astro use the same buttonVariants classes directly.
+type Props = VariantProps<typeof buttonVariants> & {
+  href: string;
+  class?: string;
+};
+const { href, variant = "default", size = "default", class: className } = Astro.props;
+---
+
+<a href={href} data-slot="button" data-variant={variant} data-size={size} class={cn(buttonVariants({ variant, size }), className)}>
+  <slot />
+</a>

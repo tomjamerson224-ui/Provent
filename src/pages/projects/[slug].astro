@@ -1,0 +1,83 @@
+---
+import type { GetStaticPaths } from "astro";
+import { Image, getImage } from "astro:assets";
+import { ArrowLeft } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import ProjectCard from "@/components/sections/ProjectCard.astro";
+import CtaButtons from "@/components/sections/CtaButtons.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { projects, categoryLabels, type Project } from "@/data/projects";
+import { systems } from "@/data/site";
+
+export const getStaticPaths = (() =>
+  projects.map((project) => ({ params: { slug: project.slug }, props: { project } }))) satisfies GetStaticPaths;
+
+const { project } = Astro.props as { project: Project };
+const related = projects
+  .filter((p) => p.slug !== project.slug && p.categories.some((c) => project.categories.includes(c)))
+  .slice(0, 3);
+const systemLinks = systems.filter((s) =>
+  project.categories.some((c) => s.href.startsWith(`/${c === "split" ? "split-system" : c}`)),
+);
+const og = await getImage({ src: project.image, width: 1200, height: 630, fit: "cover", format: "jpeg" });
+---
+
+<Layout title={project.title} description={`${project.subtitle} ${project.body[0]}`.slice(0, 158)} ogImage={og.src}>
+  <article class="py-10 sm:py-16">
+    <div class="container-page">
+      <a href="/projects" class="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground">
+        <ArrowLeft class="size-4" /> All projects
+      </a>
+      <div class="mt-6 grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-14">
+        <Image
+          src={project.image}
+          alt={project.imageAlt}
+          widths={[640, 960, 1200]}
+          sizes="(min-width: 1024px) 55vw, 100vw"
+          loading="eager"
+          class="aspect-square w-full rounded-2xl object-cover shadow-lg"
+        />
+        <div class="lg:py-4">
+          <div class="flex flex-wrap gap-1.5">
+            {project.categories.map((c) => <Badge>{categoryLabels[c]}</Badge>)}
+          </div>
+          <h1 class="mt-4 text-3xl font-extrabold text-balance sm:text-4xl">{project.title}</h1>
+          <p class="mt-4 text-xl font-medium text-foreground/80">{project.subtitle}</p>
+          <div class="mt-5 space-y-4 text-lg leading-relaxed text-muted-foreground">
+            {project.body.map((para) => <p>{para}</p>)}
+          </div>
+          <Separator className="my-8" />
+          <p class="font-semibold">Planning something similar?</p>
+          <p class="mt-1 text-muted-foreground">Tell us about your space and we'll come back with a same-day price.</p>
+          <CtaButtons class="mt-5" tone="light" />
+          {systemLinks.length > 0 && (
+            <p class="mt-6 text-sm text-muted-foreground">
+              Learn more about{" "}
+              {systemLinks.map((s, i) => (
+                <>
+                  {i > 0 && " and "}
+                  <a href={s.href} class="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4">{s.title.toLowerCase()}</a>
+                </>
+              ))}.
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  </article>
+
+  {related.length > 0 && (
+    <section class="bg-muted py-14 sm:py-20">
+      <div class="container-page">
+        <h2 class="text-2xl font-bold sm:text-3xl">Related projects</h2>
+        <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {related.map((p) => <ProjectCard project={p} />)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <QuoteBand />
+</Layout>

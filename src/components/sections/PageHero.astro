@@ -1,0 +1,41 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import CtaButtons from "./CtaButtons.astro";
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  image: ImageMetadata;
+  imageAlt?: string;
+  /** CSS object-position for the background photo. */
+  focus?: string;
+  callLabel?: string;
+  showCtas?: boolean;
+}
+const { eyebrow, title, lead, image, imageAlt = "", focus = "center", callLabel, showCtas = true } = Astro.props;
+---
+
+<section class="relative isolate overflow-hidden bg-ink text-white">
+  <Image
+    src={image}
+    alt={imageAlt}
+    widths={[640, 1024, 1600, 2000]}
+    sizes="100vw"
+    loading="eager"
+    fetchpriority="high"
+    class="absolute inset-0 -z-10 size-full object-cover opacity-55"
+    style={`object-position:${focus}`}
+  />
+  <div class="absolute inset-0 -z-10 bg-gradient-to-r from-ink via-ink/80 to-ink/20"></div>
+  <div class="container-page py-16 sm:py-20 lg:py-24">
+    <div class="max-w-2xl">
+      {eyebrow && <p class="eyebrow !text-brand">{eyebrow}</p>}
+      <h1 class="mt-3 text-4xl leading-[1.05] font-extrabold text-balance sm:text-5xl lg:text-6xl">{title}</h1>
+      {lead && <p class="mt-5 max-w-xl text-lg text-white/80">{lead}</p>}
+      <slot />
+      {showCtas && <CtaButtons class="mt-8" callLabel={callLabel} />}
+    </div>
+  </div>
+</section>

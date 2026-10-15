@@ -1,0 +1,19 @@
+---
+import { ArrowRight, Phone } from "@lucide/astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { business } from "@/data/site";
+
+interface Props {
+  quoteLabel?: string;
+  callLabel?: string;
+  /** "dark" = on an ink/photo background, "light" = on white. */
+  tone?: "dark" | "light";
+  class?: string;
+}
+const { quoteLabel = "Get a free quote", callLabel = `Call ${business.phone}`, tone = "dark", class: className } = Astro.props;
+---
+
+<div class:list={["flex flex-col gap-3 sm:flex-row", className]}>
+  <LinkButton href="/request-a-quote" size="xl">{quoteLabel}<ArrowRight class="size-4" /></LinkButton>
+  <LinkButton href={business.phoneHref} size="xl" variant="outline" class={tone === "dark" ? "border-white/30 bg-white/5 text-white hover:bg-white/15 hover:text-white" : ""}><Phone class="size-4" />{callLabel}</LinkButton>
+</div>

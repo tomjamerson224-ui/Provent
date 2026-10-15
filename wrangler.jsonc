@@ -1,0 +1,23 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "provent",
+	"compatibility_date": "2026-10-01",
+	"compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+	"main": "./src/worker.ts",
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		// Root path hits the Worker first so legacy /?page_id= URLs can 301.
+		"run_worker_first": ["/", "/index.php"]
+	},
+	"observability": {
+		"enabled": true
+	},
+	"vars": {
+		// Where quote/contact form submissions are emailed.
+		"QUOTE_TO_EMAIL": "info@proventairconditioning.com.au",
+		// Must be an address on a domain verified in Resend.
+		"QUOTE_FROM_EMAIL": "ProVent Website <website@proventairconditioning.com.au>"
+	}
+	// RESEND_API_KEY is a secret: `npx wrangler secret put RESEND_API_KEY`
+}

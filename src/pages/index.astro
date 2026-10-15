@@ -1,0 +1,122 @@
+---
+import { Image } from "astro:assets";
+import { Clock, ShieldCheck, Users, Wrench } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import FeatureSplit from "@/components/sections/FeatureSplit.astro";
+import SystemPicker from "@/components/sections/SystemPicker.astro";
+import ProjectGrid from "@/components/sections/ProjectGrid.astro";
+import BrandStrip from "@/components/sections/BrandStrip.astro";
+import Commitments from "@/components/sections/Commitments.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
+import { projects } from "@/data/projects";
+
+import heroImg from "@/assets/images/banner-van-customers.webp";
+import daikinImg from "@/assets/images/daikin-outdoor-unit.avif";
+import roofImg from "@/assets/images/ducting-roof-space.webp";
+
+const trust = [
+  { icon: Users, label: "Family-owned, Perth-based" },
+  { icon: Wrench, label: "10+ years experience" },
+  { icon: ShieldCheck, label: "3-yr work · 5-yr product warranty" },
+  { icon: Clock, label: "24/7 urgent call-outs" },
+];
+
+const approach = [
+  { title: "Plan & Assess", body: "We look at your space, how you live and your budget before recommending anything." },
+  { title: "Tailored Design", body: "Ducted, split or something else — a system sized and designed for your home." },
+  { title: "Precise Install", body: "Neat, sealed, tested and tidy, with pipes run out of sight." },
+];
+
+const challenging = [
+  {
+    title: "We handle tricky installs",
+    body: "Tight roof spaces, heritage walls, odd layouts — if other companies say “no way”, we'll find a way, using specialised tools and creative solutions without compromising finish or warranty.",
+  },
+  {
+    title: "We fix complex faults",
+    body: "Detailed troubleshooting and part-level repairs can bring “broken” units back to life, saving costly replacements and minimising downtime for homes and businesses alike.",
+  },
+  {
+    title: "We deliver major retrofits",
+    body: "Complete system upgrades or redesigns that bring modern efficiency to older homes and businesses — long-term savings, better comfort and compliance with current standards.",
+  },
+];
+---
+
+<Layout
+  title="ProVent Air Conditioning | Ducted, Split & Evaporative Aircon Perth"
+  description="Perth's family-owned air conditioning specialists. Ducted, split system and evaporative supply, install, service and 24/7 repairs. 3-year workmanship warranty. Free quotes."
+>
+  <PageHero
+    eyebrow="Perth air conditioning specialists"
+    title="Stay cool Perth. We make aircon simple."
+    lead="Ducted, split system or evaporative — we help Perth homes stay comfortable with straightforward advice and hassle-free installs."
+    image={heroImg}
+    imageAlt="ProVent technician talking with homeowners beside the ProVent van"
+    focus="70% center"
+    callLabel="Call us now"
+  >
+    <ul class="mt-8 grid max-w-xl grid-cols-2 gap-x-6 gap-y-3 text-sm text-white/85">
+      {trust.map(({ icon: Icon, label }) => (
+        <li class="flex items-center gap-2"><Icon class="size-4 shrink-0 text-brand" />{label}</li>
+      ))}
+    </ul>
+  </PageHero>
+
+  <section class="py-16 sm:py-24">
+    <div class="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <SectionHeading
+          eyebrow="Perth's go-to aircon team"
+          title="Looking for the right air-con setup?"
+          lead="At ProVent we keep things simple and local. Our Perth-based team gives honest advice to help you pick the right heating or cooling system without the stress."
+        />
+        <p class="mt-4 text-muted-foreground">
+          We'll help you choose a system — ducted, split or something else — that fits your space, lifestyle and budget.
+        </p>
+        <ol class="mt-8 grid gap-4 sm:grid-cols-3">
+          {approach.map((step, i) => (
+            <li class="rounded-xl border bg-card p-4">
+              <span class="font-display text-sm font-bold text-brand-dark">0{i + 1}</span>
+              <h3 class="mt-1 font-semibold">{step.title}</h3>
+              <p class="mt-1 text-sm text-muted-foreground">{step.body}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <Image
+        src={daikinImg}
+        alt="Daikin outdoor air conditioning unit installed against a Perth home"
+        widths={[480, 800, 1200]}
+        sizes="(min-width: 1024px) 45vw, 100vw"
+        class="aspect-[4/3] w-full rounded-2xl object-cover shadow-xl"
+      />
+    </div>
+  </section>
+
+  <FeatureSplit
+    muted
+    eyebrow="No job too hard"
+    title="We take on the challenging jobs others avoid"
+    items={challenging}
+    image={roofImg}
+    imageAlt="Ducting being installed through an open roof frame"
+    reverse
+  />
+
+  <SystemPicker />
+
+  <ProjectGrid
+    title="Our latest installations"
+    lead="A few recent jobs from around Perth — homes and local businesses alike."
+    projects={projects}
+  />
+
+  <BrandStrip />
+
+  <Commitments />
+
+  <QuoteBand />
+</Layout>

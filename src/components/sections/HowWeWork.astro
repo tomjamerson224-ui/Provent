@@ -1,0 +1,30 @@
+---
+import { howWeWork } from "@/data/site";
+import SectionHeading from "./SectionHeading.astro";
+
+interface Props {
+  title?: string;
+  steps?: { title: string; body: string }[];
+}
+const { title = "How we work", steps = howWeWork } = Astro.props;
+---
+
+<section class="bg-ink py-16 text-white sm:py-24">
+  <div class="container-page">
+    <SectionHeading
+      eyebrow="Simple process"
+      title={title}
+      tone="dark"
+      lead="No pressure, no hidden costs — one technician guides you from first call to final handover."
+    />
+    <ol class="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+      {steps.map((step, i) => (
+        <li class="bg-ink p-6 sm:p-8">
+          <span class="flex size-11 items-center justify-center rounded-full bg-brand font-display text-lg font-bold text-ink">{i + 1}</span>
+          <h3 class="mt-5 text-lg font-semibold">{step.title}</h3>
+          <p class="mt-2 text-[0.95rem] leading-relaxed text-ink-muted">{step.body}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
