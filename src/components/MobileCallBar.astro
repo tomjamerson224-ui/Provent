@@ -1,6 +1,11 @@
 ---
 import { Phone, FileText } from "@lucide/astro";
 import { business } from "@/data/site";
+
+interface Props {
+  quoteHref?: string;
+}
+const { quoteHref = "/request-a-quote" } = Astro.props;
 ---
 
 <!-- Thumb-reach call/quote bar on phones; the footer pads for it. -->
@@ -8,7 +13,7 @@ import { business } from "@/data/site";
   <a href={business.phoneHref} class="flex h-11 items-center justify-center gap-2 rounded-lg border border-white/15 text-sm font-semibold text-white">
     <Phone class="size-4 text-brand" /> Call now
   </a>
-  <a href="/request-a-quote" class="flex h-11 items-center justify-center gap-2 rounded-lg bg-brand text-sm font-semibold text-ink">
+  <a href={quoteHref} class="flex h-11 items-center justify-center gap-2 rounded-lg bg-brand text-sm font-semibold text-ink">
     <FileText class="size-4" /> Free quote
   </a>
 </div>

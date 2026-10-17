@@ -1,0 +1,36 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { business } from "@/data/site";
+// Plain-English policy for a small business. Have the owner review before
+// relying on it — it describes how the site actually works today.
+---
+
+<Layout title="Privacy Policy" description="How Pro Vent Air Conditioning WA collects, uses and protects the information you send us through this website." breadcrumbs={[{ name: "Privacy", path: "/privacy" }]}>
+  <section class="bg-ink py-12 text-white sm:py-16">
+    <div class="container-page max-w-3xl">
+      <h1 class="text-4xl font-extrabold">Privacy policy</h1>
+      <p class="mt-3 text-white/75">Last updated October 2026</p>
+    </div>
+  </section>
+  <section class="py-12 sm:py-16">
+    <div class="container-page prose prose-lg max-w-3xl prose-headings:font-display prose-headings:font-bold">
+      <p>{business.name} ("we", "us") respects your privacy. This policy explains what information we collect through this website and how we use it.</p>
+      <h2>What we collect</h2>
+      <p>When you send a quote request or contact form, we collect the details you enter — your name, phone number, email address, suburb, your message, and any files you attach (such as house plans or photos). If you call us, we'll see your phone number.</p>
+      <p>Like most websites, we and our service providers may also collect basic technical information such as your browser type, the pages you visit and how you arrived at the site (for example, from a Google ad). This is used in aggregate to understand how the site and our advertising are performing.</p>
+      <h2>How we use it</h2>
+      <ul>
+        <li>To respond to your enquiry, prepare a quote and arrange a site visit</li>
+        <li>To carry out and support the work you've asked us to do</li>
+        <li>To measure and improve our website and advertising</li>
+      </ul>
+      <p>We don't sell your personal information, and we don't share it with anyone except the service providers we use to run the business (for example, our email and website hosting providers) or where the law requires it.</p>
+      <h2>How form submissions are handled</h2>
+      <p>Form submissions are sent to our business email through a secure email delivery service. Attachments are delivered with the email and are not stored on the website.</p>
+      <h2>Cookies and advertising</h2>
+      <p>We may use Google Ads and similar tools that set cookies to tell us when someone who clicked an ad later calls us or sends a form. You can control cookies through your browser settings and manage Google ad personalisation at <a href="https://adssettings.google.com" rel="noopener">adssettings.google.com</a>.</p>
+      <h2>Accessing or correcting your information</h2>
+      <p>You can ask us what information we hold about you, or ask us to correct or delete it, by emailing <a href={business.emailHref}>{business.email}</a> or calling <a href={business.phoneHref}>{business.phone}</a>.</p>
+    </div>
+  </section>
+</Layout>

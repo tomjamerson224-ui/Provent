@@ -1,0 +1,60 @@
+---
+import { Star } from "@lucide/astro";
+import reviewsData from "@/data/reviews.json";
+import SectionHeading from "./SectionHeading.astro";
+
+interface Props {
+  title?: string;
+  /** Reviews mentioning any of these words are shown first (e.g. ducted pages). */
+  prefer?: string[];
+  limit?: number;
+  muted?: boolean;
+}
+const { title = "What our customers say", prefer = [], limit = 6, muted = false } = Astro.props;
+
+const score = (text: string) => prefer.reduce((n, w) => n + (text.toLowerCase().includes(w) ? 1 : 0), 0);
+const reviews = [...reviewsData.reviews]
+  .filter((r) => r.rating >= 4)
+  .sort((a, b) => score(b.text) - score(a.text))
+  .slice(0, limit);
+const initials = (name: string) => name.split(/\s+/).map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+---
+
+{reviews.length > 0 && (
+  <section class:list={["py-16 sm:py-24", muted && "bg-muted"]}>
+    <div class="container-page">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <SectionHeading eyebrow="Google reviews" title={title} />
+        <div class="flex items-center gap-4 rounded-2xl border bg-card px-5 py-4">
+          <svg viewBox="0 0 48 48" class="size-9 shrink-0" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <span class="font-display text-2xl font-bold">{(reviewsData.rating ?? 5).toFixed(1)}</span>
+              <span class="flex text-brand" aria-label={`${reviewsData.rating} out of 5 stars`}>{[0, 1, 2, 3, 4].map(() => <Star class="size-4 fill-current" />)}</span>
+            </div>
+            {reviewsData.mapsUrl ? (
+              <a href={reviewsData.mapsUrl} target="_blank" rel="noopener" class="text-sm text-muted-foreground underline-offset-4 hover:underline">{reviewsData.total} Google reviews</a>
+            ) : (
+              <span class="text-sm text-muted-foreground">{reviewsData.total} Google reviews</span>
+            )}
+          </div>
+        </div>
+      </div>
+      <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {reviews.map((r) => (
+          <li class="flex flex-col rounded-2xl border bg-card p-6">
+            <span class="flex text-brand" aria-label={`${r.rating} out of 5 stars`}>{Array.from({ length: Math.round(r.rating) }).map(() => <Star class="size-4 fill-current" />)}</span>
+            <blockquote class="mt-3 flex-1 text-[0.95rem] leading-relaxed text-foreground/85">“{r.text}”</blockquote>
+            <div class="mt-5 flex items-center gap-3">
+              <span class="flex size-9 items-center justify-center rounded-full bg-ink text-xs font-semibold text-brand">{initials(r.author)}</span>
+              <div class="text-sm">
+                <p class="font-semibold">{r.author}</p>
+                <p class="text-muted-foreground">{r.relativeTime} · Google</p>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}

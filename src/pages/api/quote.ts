@@ -56,10 +56,16 @@ export const POST: APIRoute = async ({ request }) => {
   const suburb = clean(data.suburb, 100);
   const help = HELP_LABELS[clean(data.help, 40)] ?? "Not specified";
   const message = clean(data.message, 5000);
-  const source = clean(data.source, 20) === "contact" ? "Contact form" : "Quote request";
+  const sourceKey = clean(data.source, 20);
+  const source = sourceKey === "contact" ? "Contact form" : sourceKey === "ducted" ? "Ducted quote (ads landing page)" : "Quote request";
+  const homeSize = clean(data.homeSize, 40);
+  const evap = clean(data.evap, 10);
   const page = clean(data.page, 200);
 
-  if (!name || !phone || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  // Email is optional on the ads landing page (phone is what matters there),
+  // but must be valid whenever it's given.
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!name || !phone || (email ? !emailOk : sourceKey !== "ducted")) {
     return json({ error: "Please fill in your name, phone and a valid email." }, 422);
   }
 
@@ -87,9 +93,11 @@ export const POST: APIRoute = async ({ request }) => {
   const rows: [string, string][] = [
     ["Name", name],
     ["Phone", phone],
-    ["Email", email],
+    ["Email", email || "—"],
     ["Suburb", suburb || "—"],
     ["Needs help with", help],
+    ...(homeSize ? ([["Home size", homeSize]] as [string, string][]) : []),
+    ...(evap ? ([["Replacing evaporative", evap]] as [string, string][]) : []),
     ["Message", message || "—"],
     ["Attachments", files.length ? files.map((f) => `${safeFilename(f.name)} (${formatBytes(f.size)})`).join(", ") : "—"],
     ["Sent from", page || "—"],
@@ -108,7 +116,7 @@ export const POST: APIRoute = async ({ request }) => {
     body: JSON.stringify({
       from: env.QUOTE_FROM_EMAIL,
       to: [env.QUOTE_TO_EMAIL],
-      reply_to: email,
+      ...(email ? { reply_to: email } : {}),
       subject: `${source}: ${name}${suburb ? ` (${suburb})` : ""} — ${help}${files.length ? ` [${files.length} attachment${files.length > 1 ? "s" : ""}]` : ""}`,
       text,
       html,

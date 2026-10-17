@@ -1,0 +1,218 @@
+---
+import { Image } from "astro:assets";
+import { ArrowRight, Check, Clock, Gauge, Home, Phone, Smartphone, Star, Volume1, Wind } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import QuoteForm from "@/components/QuoteForm.tsx";
+import FaqAccordion from "@/components/FaqAccordion.tsx";
+import LinkButton from "@/components/LinkButton.astro";
+import BrandStrip from "@/components/sections/BrandStrip.astro";
+import GoogleReviews from "@/components/sections/GoogleReviews.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
+import { business, howWeWork } from "@/data/site";
+import { bandRange, doubleStoreyNote, ductedBands, ductedExtras, extraPrice, installTimes, type Faq } from "@/data/ducted";
+import { projectsFor } from "@/data/projects";
+import reviews from "@/data/reviews.json";
+
+import heroImg from "@/assets/images/ducted-living-room.webp";
+import roofImg from "@/assets/images/evaporative-roof-unit.webp";
+
+/*
+ * Google Ads landing page for ducted only. Kept out of search (noindex) so it
+ * doesn't compete with /ducted-air-conditioning, and it has no site nav so
+ * paid visitors either call or fill in the form. Prices, times and extras all
+ * come from src/data/ducted.ts.
+ */
+
+const [small, medium, large] = ductedBands;
+const recent = projectsFor("ducted").slice(0, 3);
+
+const points = [
+  `Installed from ${bandRange(small).split("–")[0]} — fixed written quote, no hidden extras`,
+  `Most installs done in ${installTimes.ducted.replace("usually ", "")}`,
+  "3-year workmanship + 5-year manufacturer's warranty",
+  `Family-owned & local · ARCtick licence ${business.arctick}`,
+];
+
+const benefits = [
+  { icon: Home, title: "Every room comfortable", body: "One system heats and cools the whole house evenly — bedrooms included." },
+  { icon: Gauge, title: "Zoned to save power", body: `Run only the rooms you're using. Extra zones are about ${extraPrice(ductedExtras.zone).replace(" per zone", "")} each.` },
+  { icon: Smartphone, title: "AirTouch 5 smart control", body: `App, voice and room-by-room temperatures — ${extraPrice(ductedExtras.airTouch)} upgrade on a new system.` },
+  { icon: Volume1, title: "Whisper quiet", body: "The compressor's outside. Inside, just a soft breeze from slim ceiling vents." },
+  { icon: Wind, title: "Nothing on your walls", body: "Ducts hidden in the roof, with slim or linear vents in the ceiling." },
+  { icon: Clock, title: "Fast, tidy installs", body: `${installTimes.ducted.replace(/^usually/, "Usually")} — or ${installTimes.withEvapRemoval}.` },
+];
+
+const faqs: Faq[] = [
+  { q: "How much does ducted air conditioning cost?", a: `As a guide: ${bandRange(small)} for a 2–3 bedroom home, ${bandRange(medium)} for 4 bedrooms and ${bandRange(large)} for 5+, supplied and installed inc GST. Double-storey homes need an inspection first. You get a fixed written quote after a free measure-up.` },
+  { q: "How long does the install take?", a: `A standard ducted install is ${installTimes.ducted}. With an evaporative cooler to remove and the roof to patch, it's ${installTimes.withEvapRemoval}.` },
+  { q: "Will it make a mess of my house?", a: "We protect your home during the install, run the ductwork through the roof space, cut neat openings for the vents, and clean up before we leave." },
+  { q: "Can you replace my evaporative cooler?", a: `Yes — it's one of our most common jobs. Removal is ${extraPrice(ductedExtras.evapRemoval)}, including patching the tiles with your spare tiles (or capping the dropper). Metal roofs need the sheets patched: ${extraPrice(ductedExtras.roofSheets)}. The old ducts are too big to reuse, so new insulated ducting goes in.` },
+  { q: "Do you do double-storey homes?", a: doubleStoreyNote },
+  { q: "Which brands do you install?", a: "Australia's leading brands including Daikin, Panasonic, Fujitsu, ActronAir, Mitsubishi Electric and Toshiba. We'll recommend the right unit for your home, not just one brand." },
+  { q: "What warranty do I get?", a: "A 3-year warranty on our installation work, plus a 5-year manufacturer's warranty on the air conditioning units we supply." },
+  { q: "Is the quote really free?", a: "Yes. Tell us about your home and we'll come back with a price, then book a free measure-up so your written quote is exact. No pressure and no obligation." },
+];
+---
+
+<Layout
+  title="Ducted Air Conditioning Perth — Free Quote | Pro Vent"
+  description={`Ducted reverse cycle air conditioning installed in Perth from ${bandRange(small).split("–")[0]}. Family-owned, 3-year workmanship warranty. Get a free fixed quote.`}
+  landing
+  noindex
+>
+  <!-- Hero + form -->
+  <section class="relative isolate overflow-hidden bg-ink text-white">
+    <Image src={heroImg} alt="" widths={[640, 1024, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="absolute inset-0 -z-10 size-full object-cover opacity-30" />
+    <div class="absolute inset-0 -z-10 bg-gradient-to-br from-ink via-ink/90 to-ink/60"></div>
+    <div class="container-page grid gap-10 py-10 sm:py-14 lg:grid-cols-[1.05fr_1fr] lg:gap-14 lg:py-16">
+      <div class="lg:pt-6">
+        <p class="eyebrow !text-brand">Perth ducted reverse cycle specialists</p>
+        <h1 class="mt-3 text-4xl leading-[1.05] font-extrabold text-balance sm:text-5xl">Ducted Air Conditioning Perth</h1>
+        <p class="mt-4 text-lg text-white/80 sm:text-xl">
+          Whole-home heating and cooling, designed for your floor plan and installed by a family-owned local team.
+        </p>
+        <ul class="mt-6 space-y-3">
+          {points.map((p) => (
+            <li class="flex gap-3"><span class="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-brand text-ink"><Check class="size-3.5" stroke-width={3} /></span><span class="text-white/90">{p}</span></li>
+          ))}
+        </ul>
+        <div class="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <a href={business.phoneHref} class="flex items-center gap-2 text-2xl font-bold hover:text-brand"><Phone class="size-6 text-brand" />{business.phone}</a>
+          {reviews.rating && (
+            <span class="flex items-center gap-2 text-sm text-white/80">
+              <span class="flex text-brand">{[0, 1, 2, 3, 4].map(() => <Star class="size-4 fill-current" />)}</span>
+              {reviews.rating.toFixed(1)} on Google
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div id="quote" class="scroll-mt-24 text-foreground">
+        <div class="mb-3 flex items-center justify-between text-white">
+          <p class="font-display text-xl font-bold">Get your free ducted quote</p>
+          <span class="text-xs text-white/60">Takes 30 seconds</span>
+        </div>
+        <QuoteForm client:load source="ducted" phone={business.phone} phoneHref={business.phoneHref} />
+      </div>
+    </div>
+  </section>
+
+  <BrandStrip />
+
+  <!-- Prices -->
+  <section class="py-16 sm:py-20">
+    <div class="container-page">
+      <SectionHeading eyebrow="Upfront pricing" title="What ducted air conditioning costs" lead="Typical supplied-and-installed prices for single-storey Perth homes, inc GST. Your exact price is fixed in writing after a free measure-up." align="center" />
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {ductedBands.map((b) => (
+          <div class:list={["flex flex-col rounded-2xl border p-6", b.id === "medium" ? "border-brand bg-accent ring-2 ring-brand" : b.inspect ? "bg-muted" : "bg-card"]}>
+            {b.id === "medium" && <span class="mb-2 self-start rounded-full bg-brand px-2.5 py-0.5 text-xs font-semibold text-ink">Most popular</span>}
+            <h3 class="font-semibold">{b.label}</h3>
+            <p class="text-sm text-muted-foreground">{[b.detail, b.kw].filter(Boolean).join(" · ")}</p>
+            <p class:list={["mt-4 font-display font-extrabold", b.inspect ? "text-xl" : "text-2xl"]}>{b.inspect ? "Inspection first" : bandRange(b)}</p>
+            {b.inspect && <p class="mt-2 text-sm text-muted-foreground">Depends on whether ducts can run between levels.</p>}
+          </div>
+        ))}
+      </div>
+      <ul class="mx-auto mt-8 flex max-w-3xl flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+        <li>AirTouch 5 smart control: <strong class="text-foreground">{extraPrice(ductedExtras.airTouch)}</strong></li>
+        <li>Extra zones: <strong class="text-foreground">{extraPrice(ductedExtras.zone)}</strong></li>
+        <li>Evaporative removal: <strong class="text-foreground">{extraPrice(ductedExtras.evapRemoval)}</strong></li>
+        <li>Linear vents: <strong class="text-foreground">{extraPrice(ductedExtras.linearVent)}</strong></li>
+      </ul>
+      <div class="mt-8 flex justify-center"><LinkButton href="#quote" size="xl">Get my exact price <ArrowRight class="size-4" /></LinkButton></div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="bg-muted py-16 sm:py-20">
+    <div class="container-page">
+      <SectionHeading eyebrow="Why ducted" title="Comfort in every room, all year" align="center" />
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {benefits.map(({ icon: Icon, title, body }) => (
+          <div class="rounded-2xl bg-card p-6 shadow-sm">
+            <span class="flex size-11 items-center justify-center rounded-xl bg-accent text-brand-dark"><Icon class="size-5" /></span>
+            <h3 class="mt-4 text-lg font-semibold">{title}</h3>
+            <p class="mt-1.5 text-muted-foreground">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <GoogleReviews title="Perth homeowners on Pro Vent" prefer={["duct", "vent", "controller", "install"]} limit={4} />
+
+  <!-- Evaporative upgrade -->
+  <section class="bg-ink py-16 text-white sm:py-20">
+    <div class="container-page grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <p class="eyebrow !text-brand">Got an old evaporative?</p>
+        <h2 class="mt-2 text-3xl font-bold text-white sm:text-4xl">Swap it for ducted reverse cycle — usually in a day</h2>
+        <p class="mt-4 text-lg text-ink-muted">Heating as well as cooling, windows shut, and every zone under control. We take the old cooler off, patch the roof and install your new system — one team, one quote.</p>
+        <ul class="mt-6 space-y-2 text-white/90">
+          <li class="flex gap-2"><Check class="mt-1 size-4 shrink-0 text-brand" />Cooler removal {extraPrice(ductedExtras.evapRemoval)} — includes tile patching with your spare tiles</li>
+          <li class="flex gap-2"><Check class="mt-1 size-4 shrink-0 text-brand" />Metal roof sheet patching {extraPrice(ductedExtras.roofSheets)}</li>
+          <li class="flex gap-2"><Check class="mt-1 size-4 shrink-0 text-brand" />New insulated ducting — outlets can stay in the same spots if you'd rather not patch the ceiling</li>
+        </ul>
+        <LinkButton href="#quote" size="xl" class="mt-8">Quote my evaporative swap <ArrowRight class="size-4" /></LinkButton>
+      </div>
+      <Image src={roofImg} alt="Old evaporative cooler on a Perth tiled roof" widths={[480, 800]} sizes="(min-width: 1024px) 40vw, 100vw" class="aspect-[4/3] w-full rounded-2xl object-cover" />
+    </div>
+  </section>
+
+  <!-- Recent work (not linked — keeps paid visitors on the page) -->
+  <section class="py-16 sm:py-20">
+    <div class="container-page">
+      <SectionHeading eyebrow="Recent ducted installs" title="Clean work, done right the first time" align="center" />
+      <div class="mt-10 grid gap-5 md:grid-cols-3">
+        {recent.map((p) => (
+          <figure class="overflow-hidden rounded-2xl border bg-card">
+            <Image src={p.image} alt={p.imageAlt} widths={[400, 640]} sizes="(min-width: 768px) 33vw, 100vw" class="aspect-[4/3] w-full object-cover" />
+            <figcaption class="p-5"><p class="font-semibold">{p.title}</p><p class="mt-1 text-sm text-muted-foreground">{p.subtitle}</p></figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="bg-muted py-16 sm:py-20">
+    <div class="container-page">
+      <SectionHeading eyebrow="How it works" title="From quote to cool in four steps" align="center" />
+      <ol class="mt-10 grid gap-4 md:grid-cols-4">
+        {howWeWork.map((s, i) => (
+          <li class="rounded-2xl bg-card p-6 shadow-sm">
+            <span class="flex size-10 items-center justify-center rounded-full bg-ink font-display font-bold text-brand">{i + 1}</span>
+            <h3 class="mt-4 font-semibold">{s.title}</h3>
+            <p class="mt-1.5 text-sm text-muted-foreground">{s.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="py-16 sm:py-20">
+    <div class="container-page grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
+      <div>
+        <SectionHeading eyebrow="Questions" title="Ducted air conditioning FAQs" />
+        <p class="mt-4 text-muted-foreground">Still unsure? Call Matt on <a href={business.phoneHref} class="font-semibold text-foreground underline decoration-brand decoration-2 underline-offset-4">{business.phone}</a>.</p>
+      </div>
+      <FaqAccordion client:visible faqs={faqs} />
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="bg-brand py-14 text-ink sm:py-16">
+    <div class="container-page flex flex-col items-start gap-6 lg:flex-row lg:items-center lg:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="text-3xl font-extrabold sm:text-4xl">Get your free ducted quote</h2>
+        <p class="mt-2 text-lg text-ink/80">Tell us your home size and we'll come back with a price and a free measure-up. No pressure, no hidden extras.</p>
+      </div>
+      <div class="flex flex-col gap-3 sm:flex-row">
+        <LinkButton href="#quote" size="xl" class="bg-ink text-white hover:bg-ink/85">Get my quote <ArrowRight class="size-4" /></LinkButton>
+        <LinkButton href={business.phoneHref} size="xl" variant="outline" class="border-ink/25 bg-transparent hover:bg-ink/10"><Phone class="size-4" />{business.phone}</LinkButton>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -19,6 +19,18 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 
+const homeSizeOptions = [
+  { value: "2-3 bedroom", label: "2–3 bedroom" },
+  { value: "4 bedroom", label: "4 bedroom" },
+  { value: "5+ bedroom", label: "5+ bedroom" },
+  { value: "Double storey", label: "Double storey" },
+];
+
+const evapOptions = [
+  { value: "Yes", label: "Yes — remove it" },
+  { value: "No", label: "No" },
+];
+
 const helpOptions = [
   { value: "service", label: "Air conditioner service / repair" },
   { value: "installation", label: "New air conditioner installation" },
@@ -27,15 +39,20 @@ const helpOptions = [
 ];
 
 type Props = {
-  /** Which page the enquiry came from — included in the email. */
-  source: "quote" | "contact";
+  /** Which form the enquiry came from — included in the email. "ducted" is the
+   *  Google Ads landing page: asks home size + evaporative removal instead of
+   *  the general "how can we help" options. */
+  source: "quote" | "contact" | "ducted";
   phone: string;
   phoneHref: string;
 };
 
 export default function QuoteForm({ source, phone, phoneHref }: Props) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
-  const [help, setHelp] = useState(source === "quote" ? "quote" : "");
+  const ducted = source === "ducted";
+  const [help, setHelp] = useState(source === "quote" ? "quote" : ducted ? "installation" : "");
+  const [homeSize, setHomeSize] = useState("");
+  const [evap, setEvap] = useState("");
   const [files, setFiles] = useState<File[]>([]);
 
   async function onSubmit(e: SubmitEvent<HTMLFormElement>) {
@@ -47,6 +64,10 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
     body.delete("files");
     files.forEach((f) => body.append("files", f, f.name));
     body.set("help", help);
+    if (ducted) {
+      body.set("homeSize", homeSize);
+      body.set("evap", evap);
+    }
     body.set("source", source);
     body.set("page", window.location.pathname);
     setStatus("sending");
@@ -54,6 +75,7 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
       const res = await fetch("/api/quote", { method: "POST", body });
       const result = (await res.json().catch(() => ({}))) as { error?: string };
       if (!res.ok) throw new Error(result.error || "Something went wrong.");
+      window.dispatchEvent(new CustomEvent("pv:lead", { detail: { source } }));
       setStatus("sent");
       form.reset();
       setFiles([]);
@@ -96,8 +118,8 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
               <Input id={`${source}-phone`} name="phone" type="tel" autoComplete="tel" inputMode="tel" required className="h-11" />
             </Field>
             <Field>
-              <FieldLabel htmlFor={`${source}-email`}>Email *</FieldLabel>
-              <Input id={`${source}-email`} name="email" type="email" autoComplete="email" required className="h-11" />
+              <FieldLabel htmlFor={`${source}-email`}>{ducted ? "Email (optional)" : "Email *"}</FieldLabel>
+              <Input id={`${source}-email`} name="email" type="email" autoComplete="email" required={!ducted} className="h-11" />
             </Field>
             <Field>
               <FieldLabel htmlFor={`${source}-suburb`}>Suburb</FieldLabel>
@@ -105,6 +127,12 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
             </Field>
           </div>
 
+          {ducted ? (
+            <>
+              <ChoiceGroup legend="Home size" name={`${source}-size`} value={homeSize} onChange={setHomeSize} options={homeSizeOptions} cols="sm:grid-cols-4" />
+              <ChoiceGroup legend="Replacing an evaporative cooler?" name={`${source}-evap`} value={evap} onChange={setEvap} options={evapOptions} cols="sm:grid-cols-2" />
+            </>
+          ) : (
           <FieldSet>
             <FieldLegend variant="label">How can we help?</FieldLegend>
             <RadioGroup value={help} onValueChange={setHelp} className="grid gap-2 sm:grid-cols-2">
@@ -120,16 +148,17 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
               ))}
             </RadioGroup>
           </FieldSet>
+          )}
 
           <Field>
-            <FieldLabel htmlFor={`${source}-message`}>Tell us about the job</FieldLabel>
+            <FieldLabel htmlFor={`${source}-message`}>{ducted ? "Anything else? (optional)" : "Tell us about the job"}</FieldLabel>
             <Textarea
               id={`${source}-message`}
               name="message"
-              rows={5}
-              placeholder="e.g. 4-bedroom home, looking at ducted reverse cycle. Old evaporative unit on the roof."
+              rows={ducted ? 3 : 5}
+              placeholder={ducted ? "e.g. tile roof, want AirTouch 5, best time to call" : "e.g. 4-bedroom home, looking at ducted reverse cycle. Old evaporative unit on the roof."}
             />
-            <FieldDescription>We reply to every request as quickly as we can.</FieldDescription>
+            {!ducted && <FieldDescription>We reply to every request as quickly as we can.</FieldDescription>}
           </Field>
 
           <Field>
@@ -153,11 +182,45 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
 
           <Button type="submit" size="xl" disabled={status === "sending"} className="w-full sm:w-auto sm:self-start">
             {status === "sending" ? <Loader2 className="animate-spin" /> : <Send />}
-            {status === "sending" ? (files.length ? "Uploading…" : "Sending…") : source === "quote" ? "Send my quote request" : "Send message"}
+            {status === "sending" ? (files.length ? "Uploading…" : "Sending…") : ducted ? "Get my ducted quote" : source === "quote" ? "Send my quote request" : "Send message"}
           </Button>
         </FieldGroup>
       </form>
       <Toaster richColors position="top-center" />
     </div>
+  );
+}
+
+function ChoiceGroup({
+  legend,
+  name,
+  value,
+  onChange,
+  options,
+  cols,
+}: {
+  legend: string;
+  name: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: { value: string; label: string }[];
+  cols: string;
+}) {
+  return (
+    <FieldSet>
+      <FieldLegend variant="label">{legend}</FieldLegend>
+      <RadioGroup value={value} onValueChange={onChange} className={`grid grid-cols-2 gap-2 ${cols}`}>
+        {options.map((o) => (
+          <FieldLabel key={o.value} htmlFor={`${name}-${o.value}`}>
+            <Field orientation="horizontal">
+              <RadioGroupItem value={o.value} id={`${name}-${o.value}`} aria-label={o.label} />
+              <FieldContent>
+                <FieldTitle>{o.label}</FieldTitle>
+              </FieldContent>
+            </Field>
+          </FieldLabel>
+        ))}
+      </RadioGroup>
+    </FieldSet>
   );
 }

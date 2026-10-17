@@ -11,7 +11,12 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://proventairconditioning.com.au',
 
-  integrations: [react(), mdx(), sitemap()],
+  integrations: [
+    react(),
+    mdx(),
+    // The Google Ads landing page is noindex — keep it out of the sitemap too.
+    sitemap({ filter: (page) => !page.includes('/ducted-air-conditioning-quote') }),
+  ],
 
   // Prefetch internal links on hover/tap so the next page is already loaded.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },

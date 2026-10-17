@@ -15,7 +15,8 @@ import montserrat800 from "@fontsource/montserrat/files/montserrat-latin-800-nor
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import MobileCallBar from "@/components/MobileCallBar.astro";
-import { business } from "@/data/site";
+import LandingHeader from "@/components/LandingHeader.astro";
+import { business, tracking } from "@/data/site";
 import { cleanPath } from "@/lib/utils";
 
 interface Props {
@@ -28,9 +29,11 @@ interface Props {
   jsonLd?: Record<string, unknown>[];
   /** Breadcrumb trail after Home, e.g. [{ name: "Ducted", path: "/ducted-air-conditioning" }]. */
   breadcrumbs?: { name: string; path: string }[];
+  /** Paid-traffic landing page: no site nav, minimal footer, quote bar jumps to #quote. */
+  landing?: boolean;
 }
 
-const { title, description, ogImage = "/og-default.png", noindex = false, jsonLd = [], breadcrumbs = [] } = Astro.props;
+const { title, description, ogImage = "/og-default.png", noindex = false, jsonLd = [], breadcrumbs = [], landing = false } = Astro.props;
 const canonical = new URL(cleanPath(Astro.url.pathname), Astro.site);
 const fullTitle = title.includes(business.shortName) ? title : `${title} | ${business.name}`;
 
@@ -97,14 +100,41 @@ const schemas = [localBusiness, ...(breadcrumbList ? [breadcrumbList] : []), ...
 
 
     {schemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
+
+    {tracking.googleAdsId && <script async src={`https://www.googletagmanager.com/gtag/js?id=${tracking.googleAdsId}`}></script>}
+    <script is:inline define:vars={{ t: tracking }}>
+      // Conversion hooks: tel: taps and quote-form submissions (QuoteForm
+      // dispatches "pv:lead"). Always pushed to dataLayer; sent to Google Ads
+      // when IDs are set in src/data/site.ts.
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      if (t.googleAdsId) { gtag("js", new Date()); gtag("config", t.googleAdsId); }
+      document.addEventListener("click", function (e) {
+        var a = e.target.closest && e.target.closest('a[href^="tel:"]');
+        if (!a) return;
+        dataLayer.push({ event: "phone_click", page: location.pathname });
+        if (t.googleAdsId && t.callLabel) gtag("event", "conversion", { send_to: t.googleAdsId + "/" + t.callLabel });
+      });
+      window.addEventListener("pv:lead", function (e) {
+        dataLayer.push({ event: "lead_submit", form: e.detail && e.detail.source, page: location.pathname });
+        if (t.googleAdsId && t.leadLabel) gtag("event", "conversion", { send_to: t.googleAdsId + "/" + t.leadLabel });
+      });
+    </script>
   </head>
   <body class="flex min-h-dvh flex-col">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-brand focus:px-3 focus:py-2 focus:text-ink">Skip to content</a>
-    <SiteHeader />
+    {landing ? <LandingHeader /> : <SiteHeader />}
     <main id="main" class="flex-1">
       <slot />
     </main>
-    <SiteFooter />
-    <MobileCallBar />
+    {landing ? (
+      <footer class="bg-ink pb-24 text-sm text-ink-muted md:pb-0">
+        <div class="container-page flex flex-col gap-2 py-6 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} {business.name} · ARCtick {business.arctick}</p>
+          <p><a href="/" class="hover:text-white">proventairconditioning.com.au</a> · <a href="/privacy" class="hover:text-white">Privacy</a></p>
+        </div>
+      </footer>
+    ) : <SiteFooter />}
+    <MobileCallBar quoteHref={landing ? "#quote" : undefined} />
   </body>
 </html>

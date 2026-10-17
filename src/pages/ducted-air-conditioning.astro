@@ -11,6 +11,7 @@ import ProjectGrid from "@/components/sections/ProjectGrid.astro";
 import BrandStrip from "@/components/sections/BrandStrip.astro";
 import FaqSection from "@/components/sections/FaqSection.astro";
 import LatestGuides from "@/components/sections/LatestGuides.astro";
+import GoogleReviews from "@/components/sections/GoogleReviews.astro";
 import QuoteBand from "@/components/sections/QuoteBand.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { business, whyProVent } from "@/data/site";
@@ -212,6 +213,8 @@ const service = {
   <HowWeWork title="How a ducted install works with us" />
 
   <ProjectGrid title="Recent ducted installs in Perth" projects={projectsFor("ducted")} />
+
+  <GoogleReviews prefer={["duct", "vent", "controller"]} limit={4} muted />
 
   <BrandStrip />
 

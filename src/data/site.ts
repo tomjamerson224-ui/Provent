@@ -25,6 +25,18 @@ export const business = {
   arctick: "AU59556",
 } as const;
 
+/**
+ * Conversion tracking. Phone taps and form submissions always push
+ * `phone_click` / `lead_submit` events to window.dataLayer. Fill these in to
+ * also send Google Ads conversions (Google Ads > Goals > Conversions > the
+ * action > Tag setup > "Use Google tag" shows AW-XXXXXXXXX/label).
+ */
+export const tracking = {
+  googleAdsId: null as string | null, // e.g. "AW-123456789"
+  leadLabel: null as string | null, // conversion label for form submissions
+  callLabel: null as string | null, // conversion label for tel: clicks
+};
+
 export type NavLink = {
   title: string;
   href: string;

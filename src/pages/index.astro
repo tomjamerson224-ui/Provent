@@ -12,6 +12,7 @@ import QuoteBand from "@/components/sections/QuoteBand.astro";
 import SectionHeading from "@/components/sections/SectionHeading.astro";
 import FaqSection from "@/components/sections/FaqSection.astro";
 import LatestGuides from "@/components/sections/LatestGuides.astro";
+import GoogleReviews from "@/components/sections/GoogleReviews.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { ArrowRight } from "@lucide/astro";
 import { projects } from "@/data/projects";
@@ -156,6 +157,8 @@ const challenging = [
     lead="A few recent jobs from around Perth — homes and local businesses alike."
     projects={projects}
   />
+
+  <GoogleReviews limit={4} />
 
   <BrandStrip />
 
