@@ -81,5 +81,15 @@ const output = {
   fetchedAt: new Date().toISOString(),
 };
 
-writeFileSync(resolve(ROOT, "src/data/reviews.json"), JSON.stringify(output, null, 2) + "\n");
-console.log(`\nSaved ${reviews.length} reviews with text — ${output.rating}★ from ${output.total} total.`);
+// Only rewrite when something real changed, so the weekly GitHub Action
+// doesn't commit and redeploy just because fetchedAt moved.
+const outPath = resolve(ROOT, "src/data/reviews.json");
+// relativeTime ("3 weeks ago") drifts every week; the site shows the date instead.
+const strip = ({ fetchedAt, reviews, ...rest }) => JSON.stringify({ ...rest, reviews: reviews.map(({ relativeTime, ...r }) => r) });
+const previous = existsSync(outPath) ? JSON.parse(readFileSync(outPath, "utf-8")) : null;
+if (previous && strip(previous) === strip(output)) {
+  console.log(`\nNo change — still ${output.rating}★ from ${output.total} reviews.`);
+} else {
+  writeFileSync(outPath, JSON.stringify(output, null, 2) + "\n");
+  console.log(`\nUpdated: ${reviews.length} reviews with text — ${output.rating}★ from ${output.total} total.`);
+}

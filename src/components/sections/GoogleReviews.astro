@@ -17,6 +17,8 @@ const reviews = [...reviewsData.reviews]
   .filter((r) => r.rating >= 4)
   .sort((a, b) => score(b.text) - score(a.text))
   .slice(0, limit);
+const when = (r: { date: string | null; relativeTime: string }) =>
+  r.date ? new Date(r.date).toLocaleDateString("en-AU", { month: "short", year: "numeric" }) : r.relativeTime;
 const initials = (name: string) => name.split(/\s+/).map((p) => p[0]).join("").slice(0, 2).toUpperCase();
 ---
 
@@ -49,7 +51,7 @@ const initials = (name: string) => name.split(/\s+/).map((p) => p[0]).join("").s
               <span class="flex size-9 items-center justify-center rounded-full bg-ink text-xs font-semibold text-brand">{initials(r.author)}</span>
               <div class="text-sm">
                 <p class="font-semibold">{r.author}</p>
-                <p class="text-muted-foreground">{r.relativeTime} · Google</p>
+                <p class="text-muted-foreground">{when(r)} · Google</p>
               </div>
             </div>
           </li>
