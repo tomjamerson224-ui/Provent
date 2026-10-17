@@ -10,6 +10,9 @@
 		// Root path hits the Worker first so legacy /?page_id= URLs can 301.
 		"run_worker_first": ["/", "/index.php"]
 	},
+	// Apex only — www is a proxied CNAME to the apex with a Cloudflare
+	// "Redirect from WWW to root" rule, so there's one canonical host.
+	"routes": [{ "pattern": "proventairconditioning.com.au", "custom_domain": true }],
 	"observability": {
 		"enabled": true
 	},
