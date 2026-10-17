@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Toaster } from "@/components/ui/sonner";
 import FileDrop from "@/components/FileDrop";
+import { getAttribution } from "@/lib/attribution";
 import {
   Field,
   FieldContent,
@@ -70,6 +71,7 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
     }
     body.set("source", source);
     body.set("page", window.location.pathname);
+    body.set("attribution", JSON.stringify(getAttribution()));
     setStatus("sending");
     try {
       const res = await fetch("/api/quote", { method: "POST", body });

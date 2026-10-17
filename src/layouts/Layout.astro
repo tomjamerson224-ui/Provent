@@ -136,5 +136,10 @@ const schemas = [localBusiness, ...(breadcrumbList ? [breadcrumbList] : []), ...
       </footer>
     ) : <SiteFooter />}
     <MobileCallBar quoteHref={landing ? "#quote" : undefined} />
+    <script>
+      // Lead source tracking — see src/lib/attribution.ts.
+      import { recordVisit } from "@/lib/attribution";
+      recordVisit();
+    </script>
   </body>
 </html>
