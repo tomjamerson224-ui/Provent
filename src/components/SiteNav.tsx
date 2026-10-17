@@ -82,7 +82,7 @@ export default function SiteNav(props: Props) {
             <NavigationMenuContent className="!p-2">
               <ul className="grid w-[640px] grid-cols-[1.1fr_1fr] gap-2">
                 {featuredService && (
-                  <li className="row-span-3">
+                  <li style={{ gridRow: `span ${services.length} / span ${services.length}` }}>
                     <NavigationMenuLink asChild>
                       <a
                         href={featuredService.href}

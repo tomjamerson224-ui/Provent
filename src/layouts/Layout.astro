@@ -11,9 +11,13 @@ interface Props {
   /** Absolute or root-relative image for social cards. */
   ogImage?: string;
   noindex?: boolean;
+  /** Extra JSON-LD objects for this page (FAQPage, Service, etc.). */
+  jsonLd?: Record<string, unknown>[];
+  /** Breadcrumb trail after Home, e.g. [{ name: "Ducted", path: "/ducted-air-conditioning" }]. */
+  breadcrumbs?: { name: string; path: string }[];
 }
 
-const { title, description, ogImage = "/og-default.png", noindex = false } = Astro.props;
+const { title, description, ogImage = "/og-default.png", noindex = false, jsonLd = [], breadcrumbs = [] } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const fullTitle = title.includes(business.shortName) ? title : `${title} | ${business.name}`;
 
@@ -31,6 +35,20 @@ const localBusiness = {
   openingHours: "Mo-Su 00:00-23:59",
   priceRange: "$$",
 };
+
+const breadcrumbList = breadcrumbs.length
+  ? {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [{ name: "Home", path: "/" }, ...breadcrumbs].map((c, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: c.name,
+        item: new URL(c.path, Astro.site).toString(),
+      })),
+    }
+  : null;
+const schemas = [localBusiness, ...(breadcrumbList ? [breadcrumbList] : []), ...jsonLd];
 ---
 
 <!doctype html>
@@ -64,7 +82,7 @@ const localBusiness = {
       rel="stylesheet"
     />
 
-    <script type="application/ld+json" set:html={JSON.stringify(localBusiness)} />
+    {schemas.map((schema) => <script type="application/ld+json" set:html={JSON.stringify(schema)} />)}
   </head>
   <body class="flex min-h-dvh flex-col">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-md focus:bg-brand focus:px-3 focus:py-2 focus:text-ink">Skip to content</a>

@@ -1,0 +1,24 @@
+---
+import FaqAccordion from "@/components/FaqAccordion.tsx";
+import SectionHeading from "./SectionHeading.astro";
+import type { Faq } from "@/data/ducted";
+
+interface Props {
+  title?: string;
+  faqs: Faq[];
+  muted?: boolean;
+}
+const { title = "Frequently asked questions", faqs, muted = false } = Astro.props;
+---
+
+<section class:list={["py-16 sm:py-24", muted && "bg-muted"]}>
+  <div class="container-page grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
+    <div>
+      <SectionHeading eyebrow="FAQs" title={title} />
+      <p class="mt-4 text-muted-foreground">
+        Can't see your question? Call us on <a href="tel:0420496791" class="font-semibold text-foreground underline decoration-brand decoration-2 underline-offset-4">0420 496 791</a> — we're happy to help.
+      </p>
+    </div>
+    <FaqAccordion client:visible faqs={faqs} />
+  </div>
+</section>

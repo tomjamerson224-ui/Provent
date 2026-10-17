@@ -1,0 +1,113 @@
+---
+import { Image } from "astro:assets";
+import { ArrowRight } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import FeatureSplit from "@/components/sections/FeatureSplit.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
+import SystemComparison from "@/components/sections/SystemComparison.astro";
+import FaqSection from "@/components/sections/FaqSection.astro";
+import ProjectGrid from "@/components/sections/ProjectGrid.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import { Badge } from "@/components/ui/badge";
+import { projects, projectsFor } from "@/data/projects";
+import { conversionFaqs, faqSchema } from "@/data/ducted";
+
+import heroImg from "@/assets/images/evaporative-roof-unit.webp";
+import livingImg from "@/assets/images/ducted-living-room.webp";
+
+const caseStudy = projects.find((p) => p.slug === "evaporative-to-ducted-upgrade")!;
+
+const reasons = [
+  { title: "Heating as well as cooling", body: "Reverse cycle heats your whole home in winter too — many people retire a separate gas or electric heater at the same time." },
+  { title: "Works with the windows shut", body: "Evaporative cooling needs doors and windows open to work. Reverse cycle runs with the house closed up — better for security, dust, smoke and noise." },
+  { title: "Cool on humid days", body: "Evaporative struggles when Perth gets muggy. Refrigerated air keeps working whatever the humidity." },
+  { title: "Zone and control every room", body: "Run just the living areas by day and the bedrooms at night, with smart control from your phone." },
+];
+
+const steps = [
+  { title: "Free assessment & design", body: "We look at your roof space, existing ducts and floor plan, then design a correctly sized zoned system and give you a written quote." },
+  { title: "Remove the old cooler", body: "We take the evaporative unit off the roof and remove the old ductwork that won't be reused." },
+  { title: "Repair the roof", body: "We make good the opening where the cooler sat ourselves — no need to organise a separate roofer." },
+  { title: "Install new ducted reverse cycle", body: "New insulated ductwork, vents, return air grille, indoor unit in the roof and outdoor unit outside — sealed, tested and commissioned." },
+  { title: "Handover", body: "We show you how to use the zones and controller, set up your first service reminder, and leave the site clean." },
+];
+
+const service = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Evaporative to ducted reverse cycle conversion",
+  name: "Evaporative to Ducted Reverse Cycle Conversion Perth",
+  areaServed: { "@type": "City", name: "Perth" },
+  provider: { "@type": "HVACBusiness", name: "ProVent Air Conditioning", url: "https://proventairconditioning.com.au", telephone: "+61420496791" },
+};
+---
+
+<Layout
+  title="Evaporative to Ducted Reverse Cycle Conversion Perth"
+  description="Replace your old evaporative cooler with ducted reverse cycle air conditioning. We remove the roof unit, repair the roof and install a new zoned system across Perth. Free quotes."
+  breadcrumbs={[
+    { name: "Ducted Air Conditioning", path: "/ducted-air-conditioning" },
+    { name: "Evaporative to Ducted", path: "/evaporative-to-ducted-reverse-cycle" },
+  ]}
+  jsonLd={[service, faqSchema(conversionFaqs)]}
+>
+  <PageHero
+    eyebrow="Evaporative to ducted conversions"
+    title="Replace your evaporative cooler with ducted reverse cycle."
+    lead="Heating and cooling, windows closed, every zone under control. We take the old cooler off, repair the roof ourselves, and install a modern ducted system — one team, one quote."
+    image={heroImg}
+    imageAlt="Old evaporative cooler on a terracotta tiled Perth roof"
+    focus="center 30%"
+  />
+
+  <FeatureSplit eyebrow="Why switch" title="Why Perth homes are swapping evaporative for reverse cycle" items={reasons} image={livingImg} imageAlt="Living room with slim ducted reverse cycle vents in the ceiling" />
+
+  <section class="bg-muted py-16 sm:py-24">
+    <div class="container-page">
+      <SectionHeading eyebrow="What's involved" title="How an evaporative to ducted conversion works" lead="A conversion is a complete changeover, not just a new unit on the roof. Here's what we do." />
+      <ol class="mt-10 grid gap-4 md:grid-cols-5">
+        {steps.map((s, i) => (
+          <li class="rounded-2xl bg-card p-5 shadow-sm">
+            <span class="flex size-9 items-center justify-center rounded-full bg-brand font-display font-bold text-ink">{i + 1}</span>
+            <h3 class="mt-4 font-semibold">{s.title}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-24">
+    <div class="container-page grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <Image src={caseStudy.image} alt={caseStudy.imageAlt} widths={[480, 800]} sizes="(min-width: 1024px) 45vw, 100vw" class="aspect-square w-full rounded-2xl object-cover shadow-xl" />
+      <div>
+        <Badge>Case study</Badge>
+        <h2 class="mt-4 text-3xl font-bold sm:text-4xl">{caseStudy.title}</h2>
+        <p class="mt-4 text-lg font-medium">{caseStudy.subtitle}</p>
+        <div class="mt-4 space-y-4 leading-relaxed text-muted-foreground">
+          {caseStudy.body.map((p) => <p>{p}</p>)}
+        </div>
+        <a href={`/projects/${caseStudy.slug}`} class="mt-6 inline-flex items-center gap-1.5 font-semibold text-brand-dark">See the project <ArrowRight class="size-4" /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink py-16 text-white sm:py-20">
+    <div class="container-page max-w-3xl">
+      <SectionHeading tone="dark" eyebrow="Good to know" title="Can I keep my evaporative ducts?" />
+      <div class="mt-6 space-y-4 text-lg leading-relaxed text-ink-muted">
+        <p>Usually not. Evaporative systems push a lot of air through large, often uninsulated ducts. Reverse cycle needs correctly sized, insulated ductwork — otherwise it runs inefficiently and can drip condensation into the ceiling.</p>
+        <p>We'll inspect what's in your roof and tell you honestly if anything can be reused. Either way, it's all itemised in your quote.</p>
+      </div>
+    </div>
+  </section>
+
+  <SystemComparison />
+
+  <ProjectGrid title="Recent ducted installs" projects={projectsFor("ducted")} limit={3} />
+
+  <FaqSection title="Evaporative to ducted FAQs" faqs={conversionFaqs} />
+
+  <QuoteBand title="Ready to retire the evaporative cooler?" lead="Book a free assessment and we'll give you a written quote covering removal, roof repair and your new ducted system." />
+</Layout>

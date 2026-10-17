@@ -34,18 +34,18 @@ export type NavLink = {
 /** The three system types — used in the "Systems" menu and the picker grid. */
 export const systems: NavLink[] = [
   {
-    title: "Split System Air Conditioning",
-    href: "/split-system-air-conditioning",
-    description: "Efficient, quiet, cost-effective cooling and heating for bedrooms, living areas and offices.",
-    icon: iconSplit,
-    image: imgFamilyLiving,
-  },
-  {
     title: "Ducted Air Conditioning",
     href: "/ducted-air-conditioning",
     description: "Whole-home climate control with hidden ducts, slim vents and smart zoning.",
     icon: iconDucted,
     image: imgDuctedLiving,
+  },
+  {
+    title: "Split System Air Conditioning",
+    href: "/split-system-air-conditioning",
+    description: "Efficient, quiet, cost-effective cooling and heating for bedrooms, living areas and offices.",
+    icon: iconSplit,
+    image: imgFamilyLiving,
   },
   {
     title: "Evaporative Air Conditioning",
@@ -71,6 +71,16 @@ export const services: NavLink[] = [
     image: imgServicePortrait,
   },
   {
+    title: "Evaporative to Ducted Conversion",
+    href: "/evaporative-to-ducted-reverse-cycle",
+    description: "Swap the old roof cooler for ducted reverse cycle — removal and roof repair included.",
+  },
+  {
+    title: "Ducted Cost Guide",
+    href: "/ducted-air-conditioning-cost",
+    description: "What ducted air conditioning costs in Perth and what a good quote should include.",
+  },
+  {
     title: "Split System Size Calculator",
     href: "/split-system-size-calculator",
     description: "Work out roughly what size split system your room needs in under a minute.",
@@ -89,6 +99,9 @@ export const mainNav = {
 
 export const footerLinks = [
   { title: "About Us", href: "/about" },
+  { title: "Ducted Air Conditioning", href: "/ducted-air-conditioning" },
+  { title: "Ducted Cost Guide", href: "/ducted-air-conditioning-cost" },
+  { title: "Evaporative to Ducted", href: "/evaporative-to-ducted-reverse-cycle" },
   { title: "Supply & Install", href: "/supply-install" },
   { title: "Service & Repairs", href: "/service-repairs" },
   { title: "Our Work", href: "/projects" },

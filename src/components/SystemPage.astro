@@ -37,7 +37,7 @@ interface Props {
 const p = Astro.props;
 ---
 
-<Layout title={p.seoTitle} description={p.seoDescription}>
+<Layout title={p.seoTitle} description={p.seoDescription} breadcrumbs={[{ name: p.eyebrow.replace(/^./, (c) => c.toUpperCase()), path: p.path }]}>
   <PageHero eyebrow={p.eyebrow} title={p.title} lead={p.lead} image={p.heroImage} imageAlt={p.heroAlt} focus={p.heroFocus} />
   <FeatureSplit eyebrow={p.eyebrow} title={p.whyTitle} items={p.why} image={p.whyImage} imageAlt={p.whyImageAlt} />
   <BenefitGrid eyebrow="Benefits" title={p.benefitsTitle} items={p.benefits} />

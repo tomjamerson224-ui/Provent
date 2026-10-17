@@ -1,34 +1,226 @@
 ---
-import SystemPage from "@/components/SystemPage.astro";
+import { Image } from "astro:assets";
+import { ArrowRight, Calculator, Clock, House, RefreshCw, ShieldCheck, Users, Wrench } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import FeatureSplit from "@/components/sections/FeatureSplit.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
+import SystemComparison from "@/components/sections/SystemComparison.astro";
+import HowWeWork from "@/components/sections/HowWeWork.astro";
+import ProjectGrid from "@/components/sections/ProjectGrid.astro";
+import BrandStrip from "@/components/sections/BrandStrip.astro";
+import FaqSection from "@/components/sections/FaqSection.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { business, whyProVent } from "@/data/site";
+import { projectsFor } from "@/data/projects";
+import { ductedBands, ductedControllers, ductedFaqs, faqSchema, formatPrice, hasDuctedPricing } from "@/data/ducted";
+
 import heroImg from "@/assets/images/ducted-living-room.webp";
+import roofImg from "@/assets/images/project-clean-ducted.avif";
+import ventsImg from "@/assets/images/project-linear-vents.avif";
+import outdoorImg from "@/assets/images/project-panasonic-ducted.avif";
 import whyImg from "@/assets/images/tech-outdoor-unit.webp";
+
+const trust = [
+  { icon: Users, label: "Family-owned, Perth-based" },
+  { icon: ShieldCheck, label: "3-yr workmanship · 5-yr product warranty" },
+  { icon: Wrench, label: "Licensed, ARCtick-certified technicians" },
+  { icon: Clock, label: "Same-day quotes" },
+];
+
+const services = [
+  { icon: House, title: "New ducted installs", body: "Whole-home reverse cycle systems for existing homes, renovations and new builds — designed and sized for your floor plan." },
+  { icon: RefreshCw, title: "Evaporative to ducted conversions", body: "We remove the old roof cooler, repair the roof and install modern ducted reverse cycle with new insulated ductwork.", href: "/evaporative-to-ducted-reverse-cycle" },
+  { icon: ArrowRight, title: "Ducted system replacements", body: "Old system failing or inefficient? We replace the unit and upgrade ducting, vents and controls where needed." },
+  { icon: Wrench, title: "Ducted service & repairs", body: "Servicing, fault-finding and repairs on all brands, including systems we didn't install. 24/7 for urgent breakdowns.", href: "/service-repairs" },
+];
+
+const whyDucted = [
+  { title: "Complete climate control", body: "One powerful central system keeps every room evenly heated and cooled — ideal for Perth's hot summers and chilly winters." },
+  { title: "Quiet operation", body: "The noisy compressor sits outside. Inside, you hear little more than a gentle breeze from the vents." },
+  { title: "Nothing on your walls", body: "Ductwork is hidden in the roof, leaving clean ceilings with slim vents and your walls free." },
+  { title: "Energy-smart zoning", body: "Heat or cool only the rooms you're using, so you're not paying to condition empty bedrooms." },
+];
+
+const howItWorks = [
+  { title: "Outdoor unit", body: "The compressor and condenser sit outside, usually on the ground or a wall bracket, keeping the noise out of your home." },
+  { title: "Indoor fan coil in the roof", body: "A slim indoor unit in the roof space heats or cools the air and pushes it through the ductwork." },
+  { title: "Insulated ducts to every room", body: "Flexible insulated ducts carry conditioned air to ceiling vents in each room or zone." },
+  { title: "Return air grille", body: "Air is drawn back to the indoor unit through a return grille, filtered, and re-conditioned in a continuous loop." },
+];
+
+const costFactors = [
+  { title: "Size of your home", body: "Floor area, number of rooms and ceiling heights decide the system capacity you need." },
+  { title: "Number of zones", body: "More zones mean more motorised dampers and control, but lower running costs day to day." },
+  { title: "Roof space & access", body: "Tight or low-pitched roofs, double-storey homes and tricky ceiling access add install time." },
+  { title: "Brand & controller", body: "Premium inverter units and smart zone controllers cost more upfront but run more efficiently." },
+  { title: "Removing an old system", body: "Taking out an evaporative cooler or old ducted unit and repairing the roof is part of many Perth jobs." },
+  { title: "Vents & finishes", body: "Standard round or square vents, or slim linear slot diffusers for a cleaner modern look." },
+];
+
+const service = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Ducted air conditioning installation",
+  name: "Ducted Air Conditioning Installation Perth",
+  areaServed: { "@type": "City", name: "Perth" },
+  provider: { "@type": "HVACBusiness", name: business.name, url: business.url, telephone: "+61420496791" },
+};
 ---
 
-<SystemPage
-  path="/ducted-air-conditioning"
-  category="ducted"
-  seoTitle="Ducted Air Conditioning Perth — Supply & Install"
-  seoDescription="Ducted reverse cycle air conditioning installed across Perth. Whole-home comfort, smart zoning, hidden ducts and slim vents. Daikin, Panasonic, Fujitsu, ActronAir & more."
-  eyebrow="Ducted air conditioning"
-  title="Whole-home climate control."
-  lead="One powerful central system, hidden ducting and slim ceiling vents — keeping every room comfortable through Perth's hot summers and chilly winters."
-  heroImage={heroImg}
-  heroAlt="Bright open-plan living room with slim ceiling vents from a ducted system"
-  whyTitle="Why choose ducted air conditioning?"
-  why={[
-    { title: "Complete climate control", body: "A powerful central unit keeps every room evenly heated and cooled — ideal for Perth's hot summers and chilly winters." },
-    { title: "Quiet operation", body: "The noisy part sits outside, so inside you'll hear little more than a gentle breeze from the slim ceiling vents." },
-    { title: "Hidden design", body: "All the ductwork is tucked away in the roof, giving your rooms clean lines and more free wall space." },
-    { title: "Energy-smart zoning", body: "Cool or heat only the rooms you're using to keep energy bills down." },
-  ]}
-  whyImage={whyImg}
-  whyImageAlt="ProVent technician beside a ducted outdoor unit"
-  benefitsTitle="Benefits of ducted air conditioners"
-  benefits={[
-    { title: "Whole-home comfort", body: "One central unit controls the temperature in every room, just the way you like it, all year long." },
-    { title: "Smart zoning", body: "Heat or cool only the rooms you're using, saving energy and money." },
-    { title: "Clean, modern look", body: "Hidden ducts and slim vents blend in with your home's style without cluttering your space." },
-    { title: "Whisper-quiet operation", body: "The loud parts are outside, so indoor spaces stay quiet and peaceful." },
-  ]}
-  projectsTitle="Ducted air conditioner installs"
-/>
+<Layout
+  title="Ducted Air Conditioning Perth | Supply & Installation"
+  description="Ducted reverse cycle air conditioning installed across Perth by a family-owned team. New installs, evaporative-to-ducted conversions, zoning and repairs. 3-year workmanship warranty. Free same-day quotes."
+  breadcrumbs={[{ name: "Ducted Air Conditioning", path: "/ducted-air-conditioning" }]}
+  jsonLd={[service, faqSchema(ductedFaqs)]}
+>
+  <PageHero
+    eyebrow="Ducted reverse cycle specialists"
+    title="Ducted Air Conditioning Perth"
+    lead="Whole-home heating and cooling, designed for your floor plan and installed by a family-owned Perth team. Hidden ducts, slim vents, smart zoning — and honest advice on what your home actually needs."
+    image={heroImg}
+    imageAlt="Open-plan Perth living room with slim ceiling vents from a ducted reverse cycle system"
+    callLabel="Call for ducted advice"
+  >
+    <ul class="mt-8 grid max-w-xl grid-cols-1 gap-x-6 gap-y-3 text-sm text-white/85 sm:grid-cols-2">
+      {trust.map(({ icon: Icon, label }) => (
+        <li class="flex items-center gap-2"><Icon class="size-4 shrink-0 text-brand" />{label}</li>
+      ))}
+    </ul>
+  </PageHero>
+
+  <section class="py-16 sm:py-24">
+    <div class="container-page">
+      <SectionHeading
+        eyebrow="What we do"
+        title="Perth's ducted air conditioning installers"
+        lead="Ducted reverse cycle is our specialty. Whether you're building, renovating, replacing an old system or finally getting rid of that evaporative cooler, we design and install it properly the first time."
+      />
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {services.map(({ icon: Icon, title, body, href }) => {
+          const Tag = href ? "a" : "div";
+          return (
+            <Tag href={href} class:list={["flex flex-col rounded-2xl border bg-card p-6", href && "group transition hover:-translate-y-1 hover:border-brand hover:shadow-lg"]}>
+              <span class="flex size-11 items-center justify-center rounded-xl bg-accent text-brand-dark"><Icon class="size-5" /></span>
+              <h3 class="mt-4 text-lg font-semibold">{title}</h3>
+              <p class="mt-2 flex-1 text-[0.95rem] leading-relaxed text-muted-foreground">{body}</p>
+              {href && <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-dark">Learn more <ArrowRight class="size-4 transition-transform group-hover:translate-x-1" /></span>}
+            </Tag>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <FeatureSplit muted eyebrow="Why ducted" title="Why choose ducted air conditioning?" items={whyDucted} image={ventsImg} imageAlt="Slim linear ducted air conditioning vent in a white ceiling" />
+
+  <section class="py-16 sm:py-24">
+    <div class="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <SectionHeading
+          eyebrow="How it works"
+          title="How ducted reverse cycle air conditioning works"
+          lead="A ducted system is one central air conditioner that heats and cools your whole home through hidden ductwork. Here's what goes where."
+        />
+        <ol class="mt-8 space-y-5">
+          {howItWorks.map((s, i) => (
+            <li class="flex gap-4">
+              <span class="flex size-9 shrink-0 items-center justify-center rounded-full bg-ink font-display text-sm font-bold text-brand">{i + 1}</span>
+              <div>
+                <h3 class="font-semibold">{s.title}</h3>
+                <p class="mt-1 text-muted-foreground">{s.body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <Image src={roofImg} alt="Ducted indoor unit and insulated ducting installed in a roof space" widths={[320, 560]} sizes="(min-width: 1024px) 22vw, 45vw" class="aspect-[3/4] w-full rounded-2xl object-cover shadow-lg" />
+        <Image src={outdoorImg} alt="Panasonic ducted outdoor unit mounted beside a Perth home" widths={[320, 560]} sizes="(min-width: 1024px) 22vw, 45vw" class="mt-10 aspect-[3/4] w-full rounded-2xl object-cover shadow-lg" />
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink py-16 text-white sm:py-24">
+    <div class="container-page grid gap-12 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <SectionHeading tone="dark" eyebrow="Zoning & control" title="Only heat or cool the rooms you're using" />
+        <div class="mt-6 space-y-4 text-lg leading-relaxed text-ink-muted">
+          <p>Zoning divides your home into areas — typically bedrooms, living areas and the study — each controlled by a motorised damper in the ductwork. Run the living zone during the day and the bedrooms at night, and you're never paying to condition empty rooms.</p>
+          <p>With a smart zone controller you can set temperatures room by room, run schedules, and switch the system on from your phone before you get home.</p>
+          {ductedControllers.length > 0 && <p>We install {ductedControllers.join(", ")} zone controllers.</p>}
+        </div>
+      </div>
+      <ul class="grid gap-4 self-center sm:grid-cols-2">
+        {[
+          ["Lower running costs", "Only the zones you select are heated or cooled."],
+          ["Room-by-room comfort", "Different temperatures for bedrooms and living areas."],
+          ["Phone & app control", "Turn it on, schedule zones and adjust from anywhere."],
+          ["Quieter nights", "Run just the bedroom zone overnight."],
+        ].map(([t, b]) => (
+          <li class="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <h3 class="font-semibold text-white">{t}</h3>
+            <p class="mt-1 text-sm text-ink-muted">{b}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section id="cost" class="py-16 sm:py-24">
+    <div class="container-page">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <SectionHeading
+          eyebrow="Pricing"
+          title="How much does ducted air conditioning cost in Perth?"
+          lead={hasDuctedPricing
+            ? "Typical starting prices for a fully installed ducted reverse cycle system (supply + install, inc GST). Your written quote is based on a measure-up of your home."
+            : "Every home is different, so we price from a measure-up rather than guessing. These are the things that move the price — and we'll give you a free written quote, usually the same day."}
+        />
+        <LinkButton href="/ducted-air-conditioning-cost" variant="outline" size="lg" class="self-start bg-white lg:self-auto">
+          <Calculator class="size-4" /> Ducted cost guide
+        </LinkButton>
+      </div>
+
+      {hasDuctedPricing && (
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {ductedBands.filter((b) => b.from !== null).map((b) => (
+            <div class="rounded-2xl border bg-card p-6">
+              <h3 class="font-semibold">{b.label}</h3>
+              <p class="mt-1 text-sm text-muted-foreground">{b.detail}</p>
+              <p class="mt-4 text-sm text-muted-foreground">From</p>
+              <p class="font-display text-3xl font-extrabold">{formatPrice(b.from!)}</p>
+              {(b.typicalKw || b.zones) && (
+                <p class="mt-2 text-sm text-muted-foreground">{[b.typicalKw, b.zones && `${b.zones} zones`].filter(Boolean).join(" · ")}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {costFactors.map((f) => (
+          <div class="rounded-2xl bg-muted p-6">
+            <h3 class="font-semibold">{f.title}</h3>
+            <p class="mt-1.5 text-[0.95rem] text-muted-foreground">{f.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <SystemComparison />
+
+  <HowWeWork title="How a ducted install works with us" />
+
+  <ProjectGrid title="Recent ducted installs in Perth" projects={projectsFor("ducted")} />
+
+  <BrandStrip />
+
+  <FeatureSplit eyebrow="Why choose ProVent" title="A local ducted installer you deal with directly" items={whyProVent} image={whyImg} imageAlt="ProVent technician beside a ducted outdoor unit" reverse />
+
+  <FaqSection title="Ducted air conditioning FAQs" faqs={ductedFaqs} muted />
+
+  <QuoteBand title="Get a free ducted air conditioning quote" lead="Tell us about your home and we'll come back with a same-day price estimate and book a free measure-up. No pressure, no hidden costs." />
+</Layout>

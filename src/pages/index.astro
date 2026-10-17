@@ -10,11 +10,29 @@ import BrandStrip from "@/components/sections/BrandStrip.astro";
 import Commitments from "@/components/sections/Commitments.astro";
 import QuoteBand from "@/components/sections/QuoteBand.astro";
 import SectionHeading from "@/components/sections/SectionHeading.astro";
+import FaqSection from "@/components/sections/FaqSection.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { ArrowRight } from "@lucide/astro";
 import { projects } from "@/data/projects";
+import { faqSchema, type Faq } from "@/data/ducted";
 
 import heroImg from "@/assets/images/banner-van-customers.webp";
 import daikinImg from "@/assets/images/daikin-outdoor-unit.avif";
 import roofImg from "@/assets/images/ducting-roof-space.webp";
+
+const ductedLinks = [
+  { title: "Ducted air conditioning", body: "Whole-home reverse cycle, designed and zoned for your floor plan.", href: "/ducted-air-conditioning" },
+  { title: "Evaporative to ducted", body: "Swap the old roof cooler for ducted reverse cycle — roof repair included.", href: "/evaporative-to-ducted-reverse-cycle" },
+  { title: "Ducted cost guide", body: "What drives the price in Perth and what a good quote should include.", href: "/ducted-air-conditioning-cost" },
+];
+
+const homeFaqs: Faq[] = [
+  { q: "What areas of Perth do you service?", a: "We install and service air conditioning right across the Perth metro area. Call or send a quote request with your suburb and we'll confirm availability." },
+  { q: "Do you specialise in ducted air conditioning?", a: "Yes — ducted reverse cycle is our specialty, including new installs, replacements and converting old evaporative systems to ducted. We also supply and install split systems and evaporative air conditioning." },
+  { q: "How quickly can I get a quote?", a: "Send us your details and we'll give you a price estimate the same day, then book a free measure-up so your written quote is accurate before any work starts." },
+  { q: "What warranty do you offer?", a: "Every installation comes with a 3-year warranty on our workmanship and a 5-year manufacturer's warranty on the air conditioning units we supply." },
+  { q: "Do you repair air conditioners you didn't install?", a: "Yes. We service and repair all brands and models — split, ducted and multi-head — and we're available 24/7 for urgent breakdowns." },
+];
 
 const trust = [
   { icon: Users, label: "Family-owned, Perth-based" },
@@ -46,13 +64,14 @@ const challenging = [
 ---
 
 <Layout
-  title="ProVent Air Conditioning | Ducted, Split & Evaporative Aircon Perth"
-  description="Perth's family-owned air conditioning specialists. Ducted, split system and evaporative supply, install, service and 24/7 repairs. 3-year workmanship warranty. Free quotes."
+  title="Air Conditioning Perth | Ducted Air Conditioning Specialists | ProVent"
+  jsonLd={[faqSchema(homeFaqs)]}
+  description="Family-owned Perth air conditioning installers specialising in ducted reverse cycle. Ducted, split system and evaporative supply and installation, evaporative-to-ducted conversions, service and 24/7 repairs. Free same-day quotes."
 >
   <PageHero
-    eyebrow="Perth air conditioning specialists"
-    title="Stay cool Perth. We make aircon simple."
-    lead="Ducted, split system or evaporative — we help Perth homes stay comfortable with straightforward advice and hassle-free installs."
+    eyebrow="Stay cool Perth. We make aircon simple."
+    title="Air Conditioning Perth — Ducted Specialists"
+    lead="Family-owned Perth installers of ducted reverse cycle, split system and evaporative air conditioning — with straightforward advice and hassle-free installs."
     image={heroImg}
     imageAlt="ProVent technician talking with homeowners beside the ProVent van"
     focus="70% center"
@@ -96,6 +115,29 @@ const challenging = [
     </div>
   </section>
 
+  <section class="bg-ink py-16 text-white sm:py-20">
+    <div class="container-page">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <SectionHeading
+          tone="dark"
+          eyebrow="Our specialty"
+          title="Perth's ducted air conditioning specialists"
+          lead="Most of what we do is ducted reverse cycle — new installs, replacements and swapping out old evaporative coolers. Designed properly, zoned properly, installed tidily."
+        />
+        <LinkButton href="/ducted-air-conditioning" size="xl" class="self-start lg:self-auto">Explore ducted <ArrowRight class="size-4" /></LinkButton>
+      </div>
+      <div class="mt-10 grid gap-4 md:grid-cols-3">
+        {ductedLinks.map((l) => (
+          <a href={l.href} class="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:border-brand hover:bg-white/10">
+            <h3 class="text-lg font-semibold text-white">{l.title}</h3>
+            <p class="mt-2 text-ink-muted">{l.body}</p>
+            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">Learn more <ArrowRight class="size-4 transition-transform group-hover:translate-x-1" /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
   <FeatureSplit
     muted
     eyebrow="No job too hard"
@@ -117,6 +159,8 @@ const challenging = [
   <BrandStrip />
 
   <Commitments />
+
+  <FaqSection faqs={homeFaqs} muted />
 
   <QuoteBand />
 </Layout>
