@@ -18,7 +18,9 @@ export default defineConfig({
   // Emit about.html (not about/index.html) so Cloudflare serves /about
   // directly instead of 307-ing to /about/ — matches the canonical URLs.
   trailingSlash: 'never',
-  build: { format: 'file' },
+  // inlineStylesheets: the site CSS is ~16KB, so inlining it removes a
+  // render-blocking request on first load.
+  build: { format: 'file', inlineStylesheets: 'always' },
 
   // Old WordPress used plain ?page_id= permalinks — those are handled in
   // src/middleware.ts (query strings can't be matched here). These cover the

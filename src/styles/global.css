@@ -43,7 +43,8 @@
 /* Pro Vent brand: amber #FCB827 on charcoal #191C1E (from the original site). */
 :root {
   --brand: #fcb827;
-  --brand-dark: #e3a00f;
+  /* Amber for text on light backgrounds — #e3a00f failed contrast (2.25:1). */
+  --brand-dark: #8f5c00;
   --ink: #191c1e;
   --ink-foreground: #f5f5f4;
   --ink-muted: #a3a8ad;

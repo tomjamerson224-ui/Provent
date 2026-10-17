@@ -38,7 +38,7 @@ const tone = { yes: "text-green-600", partial: "text-brand-dark", no: "text-dest
         <TableBody>
           {rows.map((r) => (
             <TableRow>
-              <TableCell className="py-4 pl-5 font-medium">{r.label}</TableCell>
+              <TableHead scope="row" className="h-auto py-4 pl-5 font-medium text-foreground">{r.label}</TableHead>
               {[r.ducted, r.split, r.evap].map(([mark, text]) => {
                 const Icon = icon[mark];
                 return (

@@ -105,7 +105,7 @@ const costFaqs: Faq[] = [
             <TableBody>
               {ductedBands.map((b) => (
                 <TableRow>
-                  <TableCell className="py-4 pl-5 font-medium whitespace-normal">{b.label}</TableCell>
+                  <TableHead scope="row" className="h-auto py-4 pl-5 font-medium whitespace-normal text-foreground">{b.label}</TableHead>
                   <TableCell className="py-4">{b.kw ?? "—"}</TableCell>
                   <TableCell className="py-4 pr-5 font-semibold">{bandRange(b)}</TableCell>
                 </TableRow>
