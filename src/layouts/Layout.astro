@@ -4,6 +4,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import MobileCallBar from "@/components/MobileCallBar.astro";
 import { business } from "@/data/site";
+import { cleanPath } from "@/lib/utils";
 
 interface Props {
   title: string;
@@ -18,7 +19,7 @@ interface Props {
 }
 
 const { title, description, ogImage = "/og-default.png", noindex = false, jsonLd = [], breadcrumbs = [] } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const canonical = new URL(cleanPath(Astro.url.pathname), Astro.site);
 const fullTitle = title.includes(business.shortName) ? title : `${title} | ${business.name}`;
 
 const localBusiness = {

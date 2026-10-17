@@ -8,7 +8,9 @@ import BenefitGrid from "@/components/sections/BenefitGrid.astro";
 import SectionHeading from "@/components/sections/SectionHeading.astro";
 import BrandStrip from "@/components/sections/BrandStrip.astro";
 import LinkButton from "@/components/LinkButton.astro";
+import FaqSection from "@/components/sections/FaqSection.astro";
 import { business, whyProVent } from "@/data/site";
+import { faqSchema, type Faq } from "@/data/ducted";
 
 import heroImg from "@/assets/images/banner-tech-gauges.webp";
 import portraitImg from "@/assets/images/tech-service-portrait.avif";
@@ -18,6 +20,23 @@ import imgAirflow from "@/assets/images/homeowner-controller.avif";
 import imgLeak from "@/assets/images/split-water-leak.webp";
 import imgNoise from "@/assets/images/tech-inspecting-unit.webp";
 import imgGas from "@/assets/images/tech-gauges.webp";
+
+const serviceFaqs: Faq[] = [
+  { q: "Do you repair all air conditioner brands?", a: "Yes. We service and repair all brands and models — split systems, ducted systems and multi-head units — including older systems other companies won't touch." },
+  { q: "Will I know the cost before you start?", a: "Yes. We find the fault first and give you a clear, up-front quote before any repair work starts, so there are no surprises on the bill." },
+  { q: "Do you service ducted air conditioning?", a: "Yes. Ducted reverse cycle is our specialty — we service, fault-find and repair ducted systems whether or not we installed them." },
+  { q: "Should I repair or replace my air conditioner?", a: "If the system is relatively young and the fault is a part-level repair, fixing it is usually the better value. If it's old, inefficient or needs a major component like a compressor, replacing it can make more sense. We'll give you honest advice either way." },
+  { q: "What areas do you cover?", a: "The Perth CBD and surrounding suburbs, with plenty of experience in Kalamunda and the Perth Hills." },
+];
+
+const service = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Air conditioning service and repair",
+  name: "Air Conditioning Service & Repairs Perth",
+  areaServed: { "@type": "City", name: "Perth" },
+  provider: { "@type": "HVACBusiness", name: business.name, url: business.url, telephone: "+61420496791" },
+};
 
 const promises = [
   {
@@ -45,12 +64,14 @@ const faults = [
 ---
 
 <Layout
-  title="Air Conditioner Service & Repairs Perth"
-  description="Air conditioning service and repairs in Perth. All brands and models — split, ducted and multi-head, including older systems. Up-front quotes. Call Pro Vent on 0420 496 791."
+  title="Air Conditioning Service & Repairs Perth | Pro Vent"
+  description="Air conditioning service and repairs in Perth for all brands — split, ducted and multi-head, including older systems. Up-front quotes. 0420 496 791."
+  breadcrumbs={[{ name: "Service & Repairs", path: "/service-repairs" }]}
+  jsonLd={[service, faqSchema(serviceFaqs)]}
 >
   <PageHero
     eyebrow="Service & repairs"
-    title="Air conditioner service & repairs."
+    title="Air Conditioning Service & Repairs Perth"
     lead="Urgent breakdown or annual maintenance — we keep Perth homes and businesses running smoothly all year round."
     image={heroImg}
     imageAlt="Pro Vent technician checking refrigerant pressures on an outdoor unit"
@@ -81,6 +102,8 @@ const faults = [
 
   <BenefitGrid eyebrow="Why choose Pro Vent" title="Local, experienced and easy to deal with" items={whyProVent} />
   <BrandStrip />
+
+  <FaqSection title="Service & repair FAQs" faqs={serviceFaqs} muted />
 
   <section class="bg-ink py-16 text-white sm:py-20">
     <div class="container-page flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">

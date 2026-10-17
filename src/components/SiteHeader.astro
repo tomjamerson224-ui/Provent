@@ -3,6 +3,7 @@ import { getImage } from "astro:assets";
 import { MapPin, Mail, Phone, ShieldCheck } from "@lucide/astro";
 import SiteNav, { type MenuEntry } from "./SiteNav.tsx";
 import { business, mainNav, type NavLink } from "@/data/site";
+import { cleanPath } from "@/lib/utils";
 import logoBadge from "@/assets/images/logo-badge.png";
 import logoWordmark from "@/assets/images/logo-wordmark.avif";
 
@@ -40,7 +41,7 @@ const [services, systems, badge, wordmark] = await Promise.all([
   </div>
   <SiteNav
     client:load
-    currentPath={Astro.url.pathname.replace(/\/$/, "") || "/"}
+    currentPath={cleanPath(Astro.url.pathname)}
     logoBadge={badge.src}
     logoWordmark={wordmark.src}
     services={services}

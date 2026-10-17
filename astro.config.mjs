@@ -12,6 +12,9 @@ export default defineConfig({
 
   integrations: [react(), sitemap()],
 
+  // Prefetch internal links on hover/tap so the next page is already loaded.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
+
   // Emit about.html (not about/index.html) so Cloudflare serves /about
   // directly instead of 307-ing to /about/ — matches the canonical URLs.
   trailingSlash: 'never',
