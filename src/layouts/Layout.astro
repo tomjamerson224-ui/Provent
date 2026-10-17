@@ -8,6 +8,10 @@ import "@fontsource/montserrat/latin-600.css";
 import "@fontsource/montserrat/latin-700.css";
 import "@fontsource/montserrat/latin-800.css";
 import "@/styles/global.css";
+import poppins400 from "@fontsource/poppins/files/poppins-latin-400-normal.woff2?url";
+import poppins600 from "@fontsource/poppins/files/poppins-latin-600-normal.woff2?url";
+import montserrat700 from "@fontsource/montserrat/files/montserrat-latin-700-normal.woff2?url";
+import montserrat800 from "@fontsource/montserrat/files/montserrat-latin-800-normal.woff2?url";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import MobileCallBar from "@/components/MobileCallBar.astro";
@@ -74,6 +78,10 @@ const schemas = [localBusiness, ...(breadcrumbList ? [breadcrumbList] : []), ...
     {noindex && <meta name="robots" content="noindex" />}
     <meta name="theme-color" content="#191c1e" />
 
+    {/* Preload the fonts used above the fold so the headline doesn't reflow (CLS). */}
+    {[poppins400, poppins600, montserrat700, montserrat800].map((href) => (
+      <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+    ))}
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />

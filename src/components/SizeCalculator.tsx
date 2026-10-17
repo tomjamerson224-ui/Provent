@@ -160,7 +160,7 @@ function Choice({
         {options.map((o) => (
           <FieldLabel key={o.value} htmlFor={`${name}-${o.value}`}>
             <Field orientation="horizontal">
-              <RadioGroupItem value={o.value} id={`${name}-${o.value}`} />
+              <RadioGroupItem value={o.value} id={`${name}-${o.value}`} aria-label={o.label} />
               <FieldContent>
                 <FieldTitle>{o.label}</FieldTitle>
               </FieldContent>

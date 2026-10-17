@@ -53,7 +53,7 @@ export default function DuctedCostCalculator({ bands, extras, doubleStoreyNote, 
               {bands.map((b) => (
                 <FieldLabel key={b.id} htmlFor={`band-${b.id}`}>
                   <Field orientation="horizontal">
-                    <RadioGroupItem value={b.id} id={`band-${b.id}`} />
+                    <RadioGroupItem value={b.id} id={`band-${b.id}`} aria-label={b.label} />
                     <FieldContent>
                       <FieldTitle>{b.label}</FieldTitle>
                       <FieldDescription>{[b.detail, b.kw].filter(Boolean).join(" · ")}</FieldDescription>
@@ -76,7 +76,7 @@ export default function DuctedCostCalculator({ bands, extras, doubleStoreyNote, 
                   ].map((o) => (
                     <FieldLabel key={o.v} htmlFor={`evap-${o.v}`}>
                       <Field orientation="horizontal">
-                        <RadioGroupItem value={o.v} id={`evap-${o.v}`} />
+                        <RadioGroupItem value={o.v} id={`evap-${o.v}`} aria-label={o.t} />
                         <FieldContent>
                           <FieldTitle>{o.t}</FieldTitle>
                           <FieldDescription>{o.d}</FieldDescription>
@@ -91,7 +91,7 @@ export default function DuctedCostCalculator({ bands, extras, doubleStoreyNote, 
                 <FieldLegend variant="label" className="text-base font-semibold">3. Upgrades</FieldLegend>
                 <FieldLabel htmlFor="airtouch">
                   <Field orientation="horizontal">
-                    <Checkbox id="airtouch" checked={airTouch} onCheckedChange={(v) => setAirTouch(v === true)} />
+                    <Checkbox id="airtouch" aria-label={extras.airTouch.label} checked={airTouch} onCheckedChange={(v) => setAirTouch(v === true)} />
                     <FieldContent>
                       <FieldTitle>{extras.airTouch.label} · +{fmt(extras.airTouch.min)}</FieldTitle>
                       <FieldDescription>{extras.airTouch.detail}</FieldDescription>

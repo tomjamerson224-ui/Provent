@@ -105,7 +105,7 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
               {helpOptions.map((o) => (
                 <FieldLabel key={o.value} htmlFor={`${source}-help-${o.value}`}>
                   <Field orientation="horizontal">
-                    <RadioGroupItem value={o.value} id={`${source}-help-${o.value}`} />
+                    <RadioGroupItem value={o.value} id={`${source}-help-${o.value}`} aria-label={o.label} />
                     <FieldContent>
                       <FieldTitle>{o.label}</FieldTitle>
                     </FieldContent>
