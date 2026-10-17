@@ -14,7 +14,7 @@ import QuoteBand from "@/components/sections/QuoteBand.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { business, whyProVent } from "@/data/site";
 import { projectsFor } from "@/data/projects";
-import { ductedBands, ductedControllers, ductedFaqs, faqSchema, formatPrice, hasDuctedPricing } from "@/data/ducted";
+import { bandRange, doubleStoreyNote, ductedBands, ductedControllers, ductedExtras, ductedFaqs, extraPrice, faqSchema, installTimes } from "@/data/ducted";
 
 import heroImg from "@/assets/images/ducted-living-room.webp";
 import roofImg from "@/assets/images/project-clean-ducted.avif";
@@ -25,15 +25,15 @@ import whyImg from "@/assets/images/tech-outdoor-unit.webp";
 const trust = [
   { icon: Users, label: "Family-owned, Perth-based" },
   { icon: ShieldCheck, label: "3-yr workmanship · 5-yr product warranty" },
-  { icon: Wrench, label: "Licensed, ARCtick-certified technicians" },
-  { icon: Clock, label: "Same-day quotes" },
+  { icon: Wrench, label: "ARCtick licence AU59556" },
+  { icon: Clock, label: `Most installs done in ${installTimes.ducted.replace("usually ", "")}` },
 ];
 
 const services = [
   { icon: House, title: "New ducted installs", body: "Whole-home reverse cycle systems for existing homes, renovations and new builds — designed and sized for your floor plan." },
   { icon: RefreshCw, title: "Evaporative to ducted conversions", body: "We remove the old roof cooler, repair the roof and install modern ducted reverse cycle with new insulated ductwork.", href: "/evaporative-to-ducted-reverse-cycle" },
   { icon: ArrowRight, title: "Ducted system replacements", body: "Old system failing or inefficient? We replace the unit and upgrade ducting, vents and controls where needed." },
-  { icon: Wrench, title: "Ducted service & repairs", body: "Servicing, fault-finding and repairs on all brands, including systems we didn't install. 24/7 for urgent breakdowns.", href: "/service-repairs" },
+  { icon: Wrench, title: "Ducted service & repairs", body: "Servicing, fault-finding and repairs on all brands, including systems we didn't install.", href: "/service-repairs" },
 ];
 
 const whyDucted = [
@@ -52,11 +52,11 @@ const howItWorks = [
 
 const costFactors = [
   { title: "Size of your home", body: "Floor area, number of rooms and ceiling heights decide the system capacity you need." },
-  { title: "Number of zones", body: "More zones mean more motorised dampers and control, but lower running costs day to day." },
-  { title: "Roof space & access", body: "Tight or low-pitched roofs, double-storey homes and tricky ceiling access add install time." },
-  { title: "Brand & controller", body: "Premium inverter units and smart zone controllers cost more upfront but run more efficiently." },
-  { title: "Removing an old system", body: "Taking out an evaporative cooler or old ducted unit and repairing the roof is part of many Perth jobs." },
-  { title: "Vents & finishes", body: "Standard round or square vents, or slim linear slot diffusers for a cleaner modern look." },
+  { title: "Number of zones", body: `Additional zones are about ${extraPrice(ductedExtras.zone).replace(" per zone", "")} each, and let you run only the rooms you're using.` },
+  { title: "Roof space & access", body: "Tight roofs and tricky ceiling access add time — and double-storey homes need an inspection first. Difficult jobs are our specialty." },
+  { title: "Brand & controller", body: `Premium inverter units cost more upfront but run more efficiently. An AirTouch 5 smart controller is ${extraPrice(ductedExtras.airTouch)} extra.` },
+  { title: "Removing an evaporative cooler", body: `${extraPrice(ductedExtras.evapRemoval)} including tile patching; metal roof sheet patching is ${extraPrice(ductedExtras.roofSheets)}.` },
+  { title: "Vents & finishes", body: `Standard vents are included; slim linear vents are ${extraPrice(ductedExtras.linearVent)} where no joists need cutting.` },
 ];
 
 const service = {
@@ -70,8 +70,8 @@ const service = {
 ---
 
 <Layout
-  title="Ducted Air Conditioning Perth | Supply & Installation"
-  description="Ducted reverse cycle air conditioning installed across Perth by a family-owned team. New installs, evaporative-to-ducted conversions, zoning and repairs. 3-year workmanship warranty. Free same-day quotes."
+  title="Ducted Air Conditioning Perth | Installed from $7k | Pro Vent"
+  description="Ducted reverse cycle air conditioning installed across Perth from $7,000. Family-owned team, new installs, evaporative-to-ducted conversions, AirTouch 5 zoning and repairs. 3-year workmanship warranty."
   breadcrumbs={[{ name: "Ducted Air Conditioning", path: "/ducted-air-conditioning" }]}
   jsonLd={[service, faqSchema(ductedFaqs)]}
 >
@@ -95,7 +95,7 @@ const service = {
       <SectionHeading
         eyebrow="What we do"
         title="Perth's ducted air conditioning installers"
-        lead="Ducted reverse cycle is our specialty. Whether you're building, renovating, replacing an old system or finally getting rid of that evaporative cooler, we design and install it properly the first time."
+        lead="Ducted reverse cycle is our specialty. Whether you're building, renovating, replacing an old system or finally getting rid of that evaporative cooler, we design and install it properly the first time — across the Perth CBD and surrounds, with years of experience in Kalamunda and the Perth Hills. We also take on the difficult jobs other installers avoid."
       />
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {services.map(({ icon: Icon, title, body, href }) => {
@@ -174,30 +174,26 @@ const service = {
         <SectionHeading
           eyebrow="Pricing"
           title="How much does ducted air conditioning cost in Perth?"
-          lead={hasDuctedPricing
-            ? "Typical starting prices for a fully installed ducted reverse cycle system (supply + install, inc GST). Your written quote is based on a measure-up of your home."
-            : "Every home is different, so we price from a measure-up rather than guessing. These are the things that move the price — and we'll give you a free written quote, usually the same day."}
+          lead="Typical installed prices for single-storey Perth homes (supply + install, inc GST). Your fixed written quote comes after a free measure-up."
         />
         <LinkButton href="/ducted-air-conditioning-cost" variant="outline" size="lg" class="self-start bg-white lg:self-auto">
           <Calculator class="size-4" /> Ducted cost guide
         </LinkButton>
       </div>
 
-      {hasDuctedPricing && (
-        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {ductedBands.filter((b) => b.from !== null).map((b) => (
-            <div class="rounded-2xl border bg-card p-6">
-              <h3 class="font-semibold">{b.label}</h3>
-              <p class="mt-1 text-sm text-muted-foreground">{b.detail}</p>
-              <p class="mt-4 text-sm text-muted-foreground">From</p>
-              <p class="font-display text-3xl font-extrabold">{formatPrice(b.from!)}</p>
-              {(b.typicalKw || b.zones) && (
-                <p class="mt-2 text-sm text-muted-foreground">{[b.typicalKw, b.zones && `${b.zones} zones`].filter(Boolean).join(" · ")}</p>
-              )}
-            </div>
-          ))}
-        </div>
-      )}
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {ductedBands.map((b) => (
+          <div class:list={["rounded-2xl border p-6", b.inspect ? "bg-muted" : "bg-card"]}>
+            <h3 class="font-semibold">{b.label}</h3>
+            <p class="mt-1 text-sm text-muted-foreground">{[b.detail, b.kw].filter(Boolean).join(" · ")}</p>
+            {b.inspect ? (
+              <p class="mt-4 text-sm leading-relaxed text-muted-foreground">{doubleStoreyNote}</p>
+            ) : (
+              <p class="mt-4 font-display text-2xl font-extrabold">{bandRange(b)}</p>
+            )}
+          </div>
+        ))}
+      </div>
 
       <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {costFactors.map((f) => (
@@ -218,9 +214,9 @@ const service = {
 
   <BrandStrip />
 
-  <FeatureSplit eyebrow="Why choose ProVent" title="A local ducted installer you deal with directly" items={whyProVent} image={whyImg} imageAlt="ProVent technician beside a ducted outdoor unit" reverse />
+  <FeatureSplit eyebrow="Why choose Pro Vent" title="A local ducted installer you deal with directly" items={whyProVent} image={whyImg} imageAlt="Pro Vent technician beside a ducted outdoor unit" reverse />
 
   <FaqSection title="Ducted air conditioning FAQs" faqs={ductedFaqs} muted />
 
-  <QuoteBand title="Get a free ducted air conditioning quote" lead="Tell us about your home and we'll come back with a same-day price estimate and book a free measure-up. No pressure, no hidden costs." />
+  <QuoteBand title="Get a free ducted air conditioning quote" lead="Tell us about your home and we'll come back with a price estimate and book a free measure-up. No pressure, no hidden costs." />
 </Layout>

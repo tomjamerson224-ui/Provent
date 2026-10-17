@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, Menu, Phone, Mail, Clock } from "lucide-react";
+import { ArrowRight, Menu, Phone, Mail, MapPin } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -64,9 +64,9 @@ export default function SiteNav(props: Props) {
 
   return (
     <div className="container-page flex h-18 items-center justify-between gap-4">
-      <a href="/" className="flex shrink-0 items-center gap-2.5" aria-label="ProVent Air Conditioning — home">
+      <a href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Pro Vent Air Conditioning — home">
         <img src={props.logoBadge} alt="" width={44} height={44} className="size-11 rounded-full ring-1 ring-white/20" />
-        <img src={props.logoWordmark} alt="ProVent Air Conditioning" width={160} height={48} className="h-10 w-auto sm:h-11" />
+        <img src={props.logoWordmark} alt="Pro Vent Air Conditioning" width={160} height={48} className="h-10 w-auto sm:h-11" />
       </a>
 
       {/* ---------- Desktop ---------- */}
@@ -197,7 +197,7 @@ export default function SiteNav(props: Props) {
             <SheetHeader className="border-b bg-ink p-4 text-left">
               <SheetTitle className="flex items-center gap-2.5">
                 <img src={props.logoBadge} alt="" width={36} height={36} className="size-9 rounded-full" />
-                <img src={props.logoWordmark} alt="ProVent Air Conditioning" className="h-8 w-auto" />
+                <img src={props.logoWordmark} alt="Pro Vent Air Conditioning" className="h-8 w-auto" />
               </SheetTitle>
               <SheetDescription className="sr-only">Site navigation</SheetDescription>
             </SheetHeader>
@@ -266,7 +266,7 @@ export default function SiteNav(props: Props) {
                   <Mail className="size-4 shrink-0" /> {props.email}
                 </a>
                 <span className="flex items-center gap-2">
-                  <Clock className="size-4 shrink-0" /> 24/7 urgent call-outs
+                  <MapPin className="size-4 shrink-0" /> Perth CBD, surrounds &amp; the Hills
                 </span>
               </div>
             </div>

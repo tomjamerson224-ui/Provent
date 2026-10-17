@@ -65,7 +65,7 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
         <CheckCircle2 className="size-14 text-green-600" />
         <h3 className="mt-4 text-2xl font-bold">Thanks — we've got it!</h3>
         <p className="mt-2 max-w-sm text-muted-foreground">
-          One of our technicians will be in touch the same day. Need us sooner?
+          One of our technicians will be in touch shortly. Need us sooner?
         </p>
         <Button asChild size="xl" className="mt-6">
           <a href={phoneHref}>Call {phone}</a>
@@ -123,7 +123,7 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
               rows={5}
               placeholder="e.g. 4-bedroom home, looking at ducted reverse cycle. Old evaporative unit on the roof."
             />
-            <FieldDescription>We reply to every request the same day.</FieldDescription>
+            <FieldDescription>We reply to every request as quickly as we can.</FieldDescription>
           </Field>
 
           {/* Honeypot — real people never see or fill this. */}

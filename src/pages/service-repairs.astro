@@ -21,8 +21,8 @@ import imgGas from "@/assets/images/tech-gauges.webp";
 
 const promises = [
   {
-    title: "Available 24/7 for urgent call-outs",
-    body: "Our goal is to get to you the same day you call and have your system working again. We know being without it makes home or work uncomfortable and stressful.",
+    title: "Thorough fault-finding",
+    body: "We track down the actual cause rather than guessing, and get your system working again as quickly as possible. We know being without it makes home or work uncomfortable and stressful.",
   },
   {
     title: "All brands, all models",
@@ -46,19 +46,19 @@ const faults = [
 
 <Layout
   title="Air Conditioner Service & Repairs Perth"
-  description="24/7 air conditioning repairs in Perth. All brands and models — split, ducted and multi-head. Up-front quotes, same-day call-outs where possible. Call ProVent on 0420 496 791."
+  description="Air conditioning service and repairs in Perth. All brands and models — split, ducted and multi-head, including older systems. Up-front quotes. Call Pro Vent on 0420 496 791."
 >
   <PageHero
     eyebrow="Service & repairs"
-    title="Fast air-con fixes, 24/7."
+    title="Air conditioner service & repairs."
     lead="Urgent breakdown or annual maintenance — we keep Perth homes and businesses running smoothly all year round."
     image={heroImg}
-    imageAlt="ProVent technician checking refrigerant pressures on an outdoor unit"
+    imageAlt="Pro Vent technician checking refrigerant pressures on an outdoor unit"
     focus="25% center"
     callLabel="Urgent? Call now"
   />
 
-  <FeatureSplit eyebrow="Air-con service & repairs" title="Here when your system isn't" items={promises} image={portraitImg} imageAlt="ProVent technician working on an air conditioning unit" callLabel="Urgent? Call now" />
+  <FeatureSplit eyebrow="Air-con service & repairs" title="Here when your system isn't" items={promises} image={portraitImg} imageAlt="Pro Vent technician working on an air conditioning unit" callLabel="Urgent? Call now" />
 
   <section class="bg-muted py-16 sm:py-24">
     <div class="container-page">
@@ -79,15 +79,15 @@ const faults = [
     </div>
   </section>
 
-  <BenefitGrid eyebrow="Why choose ProVent" title="Local, experienced and easy to deal with" items={whyProVent} />
+  <BenefitGrid eyebrow="Why choose Pro Vent" title="Local, experienced and easy to deal with" items={whyProVent} />
   <BrandStrip />
 
   <section class="bg-ink py-16 text-white sm:py-20">
     <div class="container-page flex flex-col items-start gap-8 lg:flex-row lg:items-center lg:justify-between">
       <div class="max-w-2xl">
         <p class="eyebrow !text-brand">Book your emergency repair</p>
-        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Help is available day or night.</h2>
-        <p class="mt-3 text-lg text-ink-muted">Clear pricing, no hidden fees. Call and we'll send a licensed technician to make your home comfortable again — today.</p>
+        <h2 class="mt-2 text-3xl font-extrabold sm:text-4xl">Air-con playing up? Give us a call.</h2>
+        <p class="mt-3 text-lg text-ink-muted">Clear pricing, no hidden fees. Call and we'll get a licensed technician out to make your home comfortable again.</p>
       </div>
       <LinkButton href={business.phoneHref} size="xl" class="h-14 px-8 text-lg"><Phone class="size-5" />{business.phone}</LinkButton>
     </div>

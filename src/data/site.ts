@@ -10,8 +10,8 @@ import imgServicePortrait from "@/assets/images/tech-service-portrait.avif";
 import imgDuctingRoof from "@/assets/images/ducting-roof-space.webp";
 
 export const business = {
-  name: "ProVent Air Conditioning",
-  shortName: "ProVent",
+  name: "Pro Vent Air Conditioning WA",
+  shortName: "Pro Vent",
   tagline: "Perth's go-to aircon team",
   phone: "0420 496 791",
   phoneHref: "tel:0420496791",
@@ -20,7 +20,9 @@ export const business = {
   region: "Perth, Western Australia",
   owner: "Matt",
   url: "https://proventairconditioning.com.au",
-  hours: "Available 24/7 for urgent call-outs",
+  area: "Perth CBD & surrounds · Kalamunda & the Hills",
+  /** ARCtick refrigerant trading authorisation. */
+  arctick: "AU59556",
 } as const;
 
 export type NavLink = {
@@ -67,7 +69,7 @@ export const services: NavLink[] = [
   {
     title: "Service & Repairs",
     href: "/service-repairs",
-    description: "Fast fixes for all brands and models, with 24/7 urgent call-outs.",
+    description: "Fault-finding and repairs for all brands and models, with up-front quotes.",
     image: imgServicePortrait,
   },
   {
@@ -113,7 +115,7 @@ export const footerLinks = [
 export const howWeWork = [
   {
     title: "Quick Quote & Consultation",
-    body: "Tell us what you need for heating or cooling, and we'll provide a same-day price estimate and schedule a visit — no pressure or hidden costs.",
+    body: "Tell us what you need for heating or cooling, and we'll send you a price estimate and schedule a visit — no pressure or hidden costs.",
   },
   {
     title: "Precise Measure & Custom Design",
@@ -151,7 +153,7 @@ export const whyProVent = [
 export const commitments = [
   {
     title: "Safety",
-    body: "We're licensed, insured and follow safety rules. Our technicians hold a Certificate in Refrigeration and Air-Conditioning and are ARCtick certified.",
+    body: "We're licensed, insured and follow safety rules. Our technicians hold a Certificate in Refrigeration and Air-Conditioning, and we hold ARCtick licence AU59556.",
   },
   {
     title: "Quality",

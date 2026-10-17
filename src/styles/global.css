@@ -40,7 +40,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* ProVent brand: amber #FCB827 on charcoal #191C1E (from the original site). */
+/* Pro Vent brand: amber #FCB827 on charcoal #191C1E (from the original site). */
 :root {
   --brand: #fcb827;
   --brand-dark: #e3a00f;

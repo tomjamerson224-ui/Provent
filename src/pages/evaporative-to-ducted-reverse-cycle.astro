@@ -11,7 +11,8 @@ import ProjectGrid from "@/components/sections/ProjectGrid.astro";
 import QuoteBand from "@/components/sections/QuoteBand.astro";
 import { Badge } from "@/components/ui/badge";
 import { projects, projectsFor } from "@/data/projects";
-import { conversionFaqs, faqSchema } from "@/data/ducted";
+import { bandRange, conversionFaqs, ductedBands, ductedExtras, extraPrice, faqSchema, installTimes } from "@/data/ducted";
+import LinkButton from "@/components/LinkButton.astro";
 
 import heroImg from "@/assets/images/evaporative-roof-unit.webp";
 import livingImg from "@/assets/images/ducted-living-room.webp";
@@ -27,9 +28,9 @@ const reasons = [
 
 const steps = [
   { title: "Free assessment & design", body: "We look at your roof space, existing ducts and floor plan, then design a correctly sized zoned system and give you a written quote." },
-  { title: "Remove the old cooler", body: "We take the evaporative unit off the roof and remove the old ductwork that won't be reused." },
-  { title: "Repair the roof", body: "We make good the opening where the cooler sat ourselves — no need to organise a separate roofer." },
-  { title: "Install new ducted reverse cycle", body: "New insulated ductwork, vents, return air grille, indoor unit in the roof and outdoor unit outside — sealed, tested and commissioned." },
+  { title: "Remove the old cooler", body: "We take the evaporative unit off the roof and pull out the old ducts — they're too big to reuse for reverse cycle." },
+  { title: "Patch the roof", body: "Tile roofs are patched with your spare tiles (or we cap the dropper and leave it on the roof). Metal roofs get the sheets patched. No separate roofer needed." },
+  { title: "Install new ducted reverse cycle", body: "New insulated ductwork, outlets, return air grille, indoor unit in the roof and outdoor unit outside — sealed, tested and commissioned." },
   { title: "Handover", body: "We show you how to use the zones and controller, set up your first service reminder, and leave the site clean." },
 ];
 
@@ -39,12 +40,12 @@ const service = {
   serviceType: "Evaporative to ducted reverse cycle conversion",
   name: "Evaporative to Ducted Reverse Cycle Conversion Perth",
   areaServed: { "@type": "City", name: "Perth" },
-  provider: { "@type": "HVACBusiness", name: "ProVent Air Conditioning", url: "https://proventairconditioning.com.au", telephone: "+61420496791" },
+  provider: { "@type": "HVACBusiness", name: "Pro Vent Air Conditioning", url: "https://proventairconditioning.com.au", telephone: "+61420496791" },
 };
 ---
 
 <Layout
-  title="Evaporative to Ducted Reverse Cycle Conversion Perth"
+  title="Evaporative to Ducted Reverse Cycle Perth | Pro Vent"
   description="Replace your old evaporative cooler with ducted reverse cycle air conditioning. We remove the roof unit, repair the roof and install a new zoned system across Perth. Free quotes."
   breadcrumbs={[
     { name: "Ducted Air Conditioning", path: "/ducted-air-conditioning" },
@@ -65,7 +66,7 @@ const service = {
 
   <section class="bg-muted py-16 sm:py-24">
     <div class="container-page">
-      <SectionHeading eyebrow="What's involved" title="How an evaporative to ducted conversion works" lead="A conversion is a complete changeover, not just a new unit on the roof. Here's what we do." />
+      <SectionHeading eyebrow="What's involved" title="How an evaporative to ducted conversion works" lead={`A conversion is a complete changeover, not just a new unit on the roof. It's usually ${installTimes.withEvapRemoval}.`} />
       <ol class="mt-10 grid gap-4 md:grid-cols-5">
         {steps.map((s, i) => (
           <li class="rounded-2xl bg-card p-5 shadow-sm">
@@ -95,11 +96,28 @@ const service = {
 
   <section class="bg-ink py-16 text-white sm:py-20">
     <div class="container-page max-w-3xl">
-      <SectionHeading tone="dark" eyebrow="Good to know" title="Can I keep my evaporative ducts?" />
+      <SectionHeading tone="dark" eyebrow="Good to know" title="Can I keep my evaporative ducts and outlets?" />
       <div class="mt-6 space-y-4 text-lg leading-relaxed text-ink-muted">
-        <p>Usually not. Evaporative systems push a lot of air through large, often uninsulated ducts. Reverse cycle needs correctly sized, insulated ductwork — otherwise it runs inefficiently and can drip condensation into the ceiling.</p>
-        <p>We'll inspect what's in your roof and tell you honestly if anything can be reused. Either way, it's all itemised in your quote.</p>
+        <p><strong class="text-white">The ducts, no.</strong> Evaporative ducts are too big for a reverse cycle system, so we run new, correctly sized insulated ducting.</p>
+        <p><strong class="text-white">The outlet positions, if you prefer.</strong> Best practice is to move the outlets out towards the outside walls of the house, where they work best for reverse cycle. If you'd rather not patch the ceiling, we can install the new outlets in the same spots.</p>
       </div>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-24">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <SectionHeading eyebrow="Pricing" title="What does an evaporative to ducted conversion cost?" lead="It's the price of a new ducted system plus removing the cooler. Typical installed prices for single-storey homes, inc GST:" />
+        <LinkButton href="/ducted-air-conditioning-cost" variant="outline" size="lg" class="mt-6">Try the ducted cost calculator <ArrowRight class="size-4" /></LinkButton>
+      </div>
+      <ul class="divide-y rounded-2xl border bg-card">
+        {ductedBands.filter((b) => !b.inspect).map((b) => (
+          <li class="flex items-center justify-between gap-4 p-5"><span class="font-medium">{b.label} <span class="text-sm text-muted-foreground">· {b.kw}</span></span><span class="font-display font-bold">{bandRange(b)}</span></li>
+        ))}
+        {[ductedExtras.evapRemoval, ductedExtras.roofSheets].map((e) => (
+          <li class="flex items-start justify-between gap-4 bg-muted/50 p-5"><span><span class="font-medium">+ {e.label}</span><span class="block text-sm text-muted-foreground">{e.detail}</span></span><span class="shrink-0 font-display font-bold">{extraPrice(e)}</span></li>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -109,5 +127,5 @@ const service = {
 
   <FaqSection title="Evaporative to ducted FAQs" faqs={conversionFaqs} />
 
-  <QuoteBand title="Ready to retire the evaporative cooler?" lead="Book a free assessment and we'll give you a written quote covering removal, roof repair and your new ducted system." />
+  <QuoteBand title="Ready to retire the evaporative cooler?" lead="Book a free assessment and we'll give you a written quote covering removal, roof patching and your new ducted system." />
 </Layout>

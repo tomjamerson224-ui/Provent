@@ -68,7 +68,7 @@ export const projects: Project[] = [
       "No risky shortcuts — just a well-drilled team moving larger units smoothly into place, so your new air-con starts its life safely and performs at its best.",
     ],
     image: imgPrecisionLift,
-    imageAlt: "ProVent technicians lifting a ducted outdoor unit into position with a hoist",
+    imageAlt: "Pro Vent technicians lifting a ducted outdoor unit into position with a hoist",
     categories: ["ducted"],
   },
   {

@@ -59,7 +59,7 @@ export const POST: APIRoute = async ({ request }) => {
     ["Sent from", page || "—"],
   ];
   const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n");
-  const html = `<h2 style="font-family:sans-serif">${source} — ProVent website</h2><table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">${rows
+  const html = `<h2 style="font-family:sans-serif">${source} — Pro Vent website</h2><table style="font-family:sans-serif;font-size:14px;border-collapse:collapse">${rows
     .map(
       ([k, v]) =>
         `<tr><td style="padding:6px 12px 6px 0;color:#666;vertical-align:top;white-space:nowrap">${k}</td><td style="padding:6px 0;white-space:pre-wrap">${escapeHtml(v)}</td></tr>`,

@@ -1,8 +1,7 @@
 /**
  * Ducted air conditioning facts used across the ducted pages, cost guide and
- * calculator. Everything marked TODO comes from the owner — never guess a
- * price, size or brand claim. `null` values are hidden on the site, so pages
- * stay publishable while they're blank.
+ * calculator. Every price, size and timeframe here came from the owner
+ * (Oct 2026) — never guess one. Prices are supply + install, inc GST.
  */
 
 export type DuctedBand = {
@@ -10,73 +9,138 @@ export type DuctedBand = {
   label: string;
   /** Short description shown under the label. */
   detail: string;
-  /** Typical system capacity, e.g. "12.5–14kW". TODO: owner to confirm. */
-  typicalKw: string | null;
-  /** Typical number of zones, e.g. "4–6". TODO: owner to confirm. */
-  zones: string | null;
-  /** "From" price, supply + install, inc GST. TODO: owner to supply. */
-  from: number | null;
+  /** Typical system capacity, e.g. "10–14kW". */
+  kw: string | null;
+  /** Typical installed price range. `max: null` means open-ended ("$16,000+"). */
+  min: number | null;
+  max: number | null;
+  /** Needs a site inspection before any price can be given. */
+  inspect?: boolean;
 };
 
-// TODO(owner): fill in typicalKw, zones and from for each band.
 export const ductedBands: DuctedBand[] = [
-  { id: "small", label: "Apartment or 2–3 bedroom home", detail: "Single storey, up to roughly 150m²", typicalKw: null, zones: null, from: null },
-  { id: "medium", label: "4 bedroom home", detail: "Single storey family home, roughly 150–220m²", typicalKw: null, zones: null, from: null },
-  { id: "large", label: "5+ bedroom or larger home", detail: "Large single storey, roughly 220m² and up", typicalKw: null, zones: null, from: null },
-  { id: "double", label: "Double-storey home", detail: "Usually needs a larger system or two systems", typicalKw: null, zones: null, from: null },
+  { id: "small", label: "2–3 bedroom home", detail: "Single storey", kw: "7–10kW", min: 7000, max: 12000 },
+  { id: "medium", label: "4 bedroom home", detail: "Single storey", kw: "10–14kW", min: 10000, max: 15000 },
+  { id: "large", label: "5+ bedroom home", detail: "Single storey", kw: "16kW+", min: 16000, max: null },
+  { id: "double", label: "Double-storey home", detail: "Inspection needed first", kw: null, min: null, max: null, inspect: true },
 ];
 
-export type DuctedExtra = { id: string; label: string; detail: string; price: number | null };
+export const doubleStoreyNote =
+  "Double-storey homes vary a lot. If there's a provision to run a duct downstairs, one system can often do both levels. If not — and there's a real ceiling space on each level — upstairs and downstairs may need separate units. We need to inspect the home to see what's possible before we can price it.";
 
-// TODO(owner): price each add-on, or delete ones that don't apply.
-export const ductedExtras: DuctedExtra[] = [
-  { id: "evapRemoval", label: "Remove old evaporative cooler & repair roof", detail: "Take the old unit off the roof and make good the opening", price: null },
-  { id: "smartControl", label: "Smart zone controller (app / Wi-Fi)", detail: "Control each zone from your phone", price: null },
-  { id: "extraZone", label: "Each additional zone", detail: "Beyond the zones included in the base price", price: null },
-  { id: "linearVents", label: "Upgrade to slim linear vents", detail: "Low-profile slot diffusers instead of round/square vents", price: null },
-];
+export type DuctedExtra = {
+  id: string;
+  label: string;
+  detail: string;
+  /** Fixed price, or the low end of a range. */
+  min: number;
+  /** High end of a range (equal to min for fixed prices). */
+  max: number;
+  /** Priced per unit (zones, vents) rather than once. */
+  perUnit?: string;
+};
 
-/** True once at least one band has a published price — gates the calculator. */
-export const hasDuctedPricing = ductedBands.some((b) => b.from !== null);
+export const ductedExtras: Record<"evapRemoval" | "roofSheets" | "airTouch" | "zone" | "linearVent", DuctedExtra> = {
+  evapRemoval: {
+    id: "evapRemoval",
+    label: "Remove old evaporative cooler",
+    detail: "Includes patching tiles (customer-supplied tiles), or capping the dropper and leaving it on the roof",
+    min: 650,
+    max: 650,
+  },
+  roofSheets: {
+    id: "roofSheets",
+    label: "Patch metal roof sheets",
+    detail: "Where the cooler sat on a metal roof — depends on length and complexity",
+    min: 800,
+    max: 1500,
+  },
+  airTouch: {
+    id: "airTouch",
+    label: "AirTouch 5 smart controller upgrade",
+    detail: "Control every zone from your phone, with schedules and room temperatures",
+    min: 1000,
+    max: 1000,
+  },
+  zone: {
+    id: "zone",
+    label: "Additional zones",
+    detail: "Each extra zone",
+    min: 100,
+    max: 100,
+    perUnit: "zone",
+  },
+  linearVent: {
+    id: "linearVent",
+    label: "Slim linear vents",
+    detail: "Where no ceiling joists need cutting — the outlet must run parallel to the joists",
+    min: 250,
+    max: 250,
+    perUnit: "vent",
+  },
+};
 
-/** Zone controllers installed. TODO(owner): confirm which brands he fits. */
-export const ductedControllers: string[] = [];
+export const extrasList = Object.values(ductedExtras);
+
+/** Install times from the owner. */
+export const installTimes = {
+  ducted: "usually half a day",
+  withEvapRemoval: "a full day, including removing the evaporative cooler and patching the roof",
+};
+
+/** Zone controllers installed. */
+export const ductedControllers = ["AirTouch 5"];
 
 /** Brands the original site said they install. */
 export const ductedBrands = ["Daikin", "Panasonic", "Fujitsu", "ActronAir", "Mitsubishi Electric", "Toshiba"];
 
 export const formatPrice = (n: number) => `$${n.toLocaleString("en-AU")}`;
+export const formatK = (n: number) => `$${Math.round(n / 1000)}k`;
 
-const lowestFrom = ductedBands.map((b) => b.from).filter((n): n is number => n !== null).sort((a, b) => a - b)[0];
+/** "$7,000–$12,000" / "$16,000+" */
+export const bandRange = (b: DuctedBand) =>
+  b.min === null ? "Inspection needed" : b.max === null ? `${formatPrice(b.min)}+` : `${formatPrice(b.min)}–${formatPrice(b.max)}`;
+
+/** "$800–$1,500" / "$650" with optional per-unit suffix */
+export const extraPrice = (e: DuctedExtra) =>
+  `${e.min === e.max ? formatPrice(e.min) : `${formatPrice(e.min)}–${formatPrice(e.max)}`}${e.perUnit ? ` per ${e.perUnit}` : ""}`;
+
+const [small, medium, large] = ductedBands;
 
 export type Faq = { q: string; a: string };
 
 export const ductedFaqs: Faq[] = [
   {
     q: "How much does ducted air conditioning cost in Perth?",
-    a: lowestFrom
-      ? `Our ducted reverse cycle systems start from ${formatPrice(lowestFrom)} supplied and installed (inc GST). The final price depends on the size of your home, the number of zones, roof access and whether an old system needs removing. We measure up and give you a written quote before any work starts.`
-      : "It depends on the size of your home, the number of rooms and zones, ceiling and roof access, and whether an old evaporative or ducted system needs removing. We measure up and give you a free written quote — usually the same day — so you know the exact price before any work starts.",
+    a: `As a guide, a fully installed ducted reverse cycle system costs ${bandRange(small)} for a 2–3 bedroom home, ${bandRange(medium)} for a 4 bedroom home, and ${bandRange(large)} for 5 bedrooms or more (supply and install, inc GST). Double-storey homes need an inspection first. Extras like removing an old evaporative cooler (${extraPrice(ductedExtras.evapRemoval)}) or an AirTouch 5 smart controller (${extraPrice(ductedExtras.airTouch)}) are itemised in your written quote.`,
+  },
+  {
+    q: "What size ducted system do I need?",
+    a: `As a starting point: ${small.kw} for a 2–3 bedroom home, ${medium.kw} for a 4 bedroom home, and ${large.kw} for 5 bedrooms or more. Floor area, ceiling height, insulation and which way the house faces all matter, so we confirm the right size when we measure up.`,
   },
   {
     q: "How long does a ducted air conditioning install take?",
-    a: "Most single-storey homes are installed in one to two days. Larger or double-storey homes, or jobs that include removing an old evaporative cooler and repairing the roof, can take longer. We'll give you a timeframe with your quote.",
+    a: `A standard ducted install is ${installTimes.ducted}. If we're also removing an old evaporative cooler and patching the roof, it's ${installTimes.withEvapRemoval}.`,
   },
   {
     q: "Can I replace my evaporative cooler with ducted reverse cycle?",
-    a: "Yes — it's one of the most common upgrades we do in Perth. We remove the old evaporative unit, repair the roof where it sat, and install a new ducted reverse cycle system with properly insulated ductwork. You get heating as well as cooling, and you can keep windows closed while it runs.",
+    a: `Yes — it's one of the most common jobs we do. We remove the old cooler (${extraPrice(ductedExtras.evapRemoval)}, including patching the tiles with your spare tiles, or capping the dropper), and install a new ducted reverse cycle system with new insulated ductwork. It's usually done in a day.`,
   },
   {
     q: "Can my existing evaporative ductwork be reused?",
-    a: "Usually not. Evaporative systems move a large volume of air through big, often uninsulated ducts, while reverse cycle systems need correctly sized, insulated ducting to work efficiently. We'll inspect what you have and tell you honestly if anything can be reused.",
+    a: "No — evaporative ducts are too big for a reverse cycle system, so we run new, correctly sized insulated ducting. Best practice is to move the outlets out towards the outside walls of the house, but we can reuse the existing outlet positions if you'd rather not patch the ceiling.",
   },
   {
     q: "What is zoning and do I need it?",
-    a: "Zoning splits your home into areas — for example bedrooms and living areas — that you can heat or cool independently. You only run the rooms you're using, which keeps running costs down. Almost every ducted system we install is zoned.",
+    a: `Zoning splits your home into areas — for example bedrooms and living areas — that you heat or cool separately, so you only run the rooms you're using. Additional zones are about ${extraPrice(ductedExtras.zone).replace(" per zone", "")} each, and an AirTouch 5 smart controller lets you control every zone from your phone.`,
+  },
+  {
+    q: "Can I have a double-storey home ducted?",
+    a: doubleStoreyNote,
   },
   {
     q: "Is ducted or split system better for my home?",
-    a: "Ducted suits homes where you want even comfort in most rooms with nothing on the walls. Split systems are better value when you only need one to three rooms done. Many Perth homes are a good fit for either — we'll give you honest advice on what makes sense for your layout and budget.",
+    a: "Ducted suits homes where you want even comfort in most rooms with nothing on the walls. Split systems are better value when you only need one to three rooms done. We'll give you honest advice on what makes sense for your layout and budget.",
   },
   {
     q: "Which ducted air conditioning brands do you install?",
@@ -88,22 +152,22 @@ export const ductedFaqs: Faq[] = [
   },
   {
     q: "Do you service and repair ducted systems you didn't install?",
-    a: "Yes. We service and repair all brands and models of ducted air conditioning, including older systems other companies won't touch, and we're available 24/7 for urgent breakdowns.",
+    a: "Yes. We service and repair all brands and models of ducted air conditioning, including older systems other companies won't touch.",
   },
 ];
 
 export const conversionFaqs: Faq[] = [
   {
     q: "How much does it cost to convert evaporative to ducted reverse cycle?",
-    a: "The cost depends on the size of your home, how many zones you want, and how much roof repair is needed once the old cooler comes off. Because new insulated ductwork is usually required, it's priced like a full ducted install plus removal. We'll give you a free written quote that includes every part of the job.",
+    a: `It's the price of a new ducted system (${bandRange(small)} for a 2–3 bedroom home, ${bandRange(medium)} for 4 bedrooms, ${bandRange(large)} for 5+) plus ${extraPrice(ductedExtras.evapRemoval)} to remove the evaporative cooler. On a metal roof, patching the roof sheets adds ${extraPrice(ductedExtras.roofSheets)} depending on length and complexity.`,
   },
   {
     q: "What happens to the hole in the roof?",
-    a: "We take care of it. When the evaporative unit comes off we repair the roof opening ourselves, so you don't need to organise a separate roofer.",
+    a: "On a tile roof, we patch it with tiles you supply as part of the removal. Alternatively we can cap the dropper and leave it on the roof. On a metal roof we patch the roof sheets ourselves, priced by length and complexity — no need to organise a separate roofer.",
   },
   {
     q: "Can you reuse my evaporative ducts?",
-    a: "Usually not. Evaporative ducts are sized for high airflow and are often uninsulated, which suits evaporative cooling but not refrigerated air. A reverse cycle system needs correctly sized, insulated ducts to run efficiently and avoid condensation. We'll check yours and let you know.",
+    a: "No — evaporative ducts are too big for reverse cycle, so new insulated ducting is installed. Best practice is to move the outlets towards the outside walls, but we can keep them in the same spots if you don't want to patch the ceiling.",
   },
   {
     q: "Will reverse cycle cost more to run than evaporative?",
@@ -111,7 +175,7 @@ export const conversionFaqs: Faq[] = [
   },
   {
     q: "How long does the conversion take?",
-    a: "Most conversions on single-storey homes take two to three days including removal of the old unit and roof repair. We'll confirm the timeframe when we quote.",
+    a: `Usually ${installTimes.withEvapRemoval}.`,
   },
 ];
 

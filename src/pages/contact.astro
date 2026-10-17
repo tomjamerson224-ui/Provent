@@ -1,5 +1,5 @@
 ---
-import { Clock, Mail, MapPin, Phone } from "@lucide/astro";
+import { Mail, MapPin, Phone, ShieldCheck } from "@lucide/astro";
 import Layout from "@/layouts/Layout.astro";
 import PageHero from "@/components/sections/PageHero.astro";
 import QuoteForm from "@/components/QuoteForm.tsx";
@@ -11,21 +11,21 @@ import heroImg from "@/assets/images/team-van.avif";
 const channels = [
   { icon: Phone, label: "Phone", value: business.phone, href: business.phoneHref },
   { icon: Mail, label: "Email", value: business.email, href: business.emailHref },
-  { icon: Clock, label: "Hours", value: business.hours },
-  { icon: MapPin, label: "Service area", value: "All of Perth, Western Australia" },
+  { icon: MapPin, label: "Service area", value: business.area },
+  { icon: ShieldCheck, label: "ARCtick licence", value: business.arctick },
 ];
 ---
 
 <Layout
   title="Contact Us"
-  description="Contact ProVent Air Conditioning in Perth. Call 0420 496 791 or email info@proventairconditioning.com.au for quotes, service and 24/7 urgent repairs."
+  description="Contact Pro Vent Air Conditioning in Perth. Call 0420 496 791 or email info@proventairconditioning.com.au for quotes, ducted installs, service and repairs."
 >
   <PageHero
     eyebrow="Contact us"
     title="We're one call away."
     lead="For a free quote or to ask anything at all, call or send us a message and one of our technicians will get back to you promptly."
     image={heroImg}
-    imageAlt="ProVent technician walking to the branded van outside a Perth home"
+    imageAlt="Pro Vent technician walking to the branded van outside a Perth home"
     focus="65% center"
     showCtas={false}
   />
@@ -53,7 +53,7 @@ const channels = [
         </div>
       </div>
       <div>
-        <SectionHeading title="Send us a message" lead="Fill in the form and we'll get back to you the same day." class="mb-6" />
+        <SectionHeading title="Send us a message" lead="Fill in the form and we'll get back to you as soon as we can." class="mb-6" />
         <QuoteForm client:visible source="contact" phone={business.phone} phoneHref={business.phoneHref} />
       </div>
     </div>
