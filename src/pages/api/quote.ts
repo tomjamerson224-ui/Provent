@@ -1,5 +1,7 @@
 import type { APIRoute } from "astro";
 import { env } from "cloudflare:workers";
+import { Buffer } from "node:buffer";
+import { MAX_FILE_BYTES, MAX_FILES, MAX_TOTAL_BYTES, formatBytes, isAllowedFile } from "@/lib/attachments";
 
 // The only on-demand route — everything else is prerendered.
 export const prerender = false;
@@ -19,10 +21,28 @@ const clean = (v: unknown, max = 200) => (typeof v === "string" ? v.trim().slice
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
+/** Keep attachment names readable but safe for email headers. */
+const safeFilename = (name: string) =>
+  name.replace(/[^\w.\- ()]+/g, "_").replace(/_+/g, "_").slice(-100) || "attachment";
+
 export const POST: APIRoute = async ({ request }) => {
-  let data: Record<string, unknown>;
+  let data: Record<string, unknown> = {};
+  let files: File[] = [];
+
+  const type = request.headers.get("content-type") ?? "";
   try {
-    data = await request.json();
+    if (type.includes("multipart/form-data")) {
+      const form = await request.formData();
+      for (const [key, value] of form.entries()) {
+        if (key === "files") {
+          if (typeof value !== "string" && value.size > 0) files.push(value);
+        } else if (typeof value === "string") {
+          data[key] = value;
+        }
+      }
+    } else {
+      data = await request.json();
+    }
   } catch {
     return json({ error: "Invalid request." }, 400);
   }
@@ -43,11 +63,26 @@ export const POST: APIRoute = async ({ request }) => {
     return json({ error: "Please fill in your name, phone and a valid email." }, 422);
   }
 
+  if (files.length > MAX_FILES) return json({ error: `Please attach up to ${MAX_FILES} files.` }, 422);
+  const total = files.reduce((sum, f) => sum + f.size, 0);
+  const tooBig = files.find((f) => f.size > MAX_FILE_BYTES);
+  if (tooBig) return json({ error: `"${tooBig.name}" is over ${formatBytes(MAX_FILE_BYTES)}.` }, 413);
+  if (total > MAX_TOTAL_BYTES) return json({ error: `Attachments are over ${formatBytes(MAX_TOTAL_BYTES)} in total.` }, 413);
+  const badType = files.find((f) => !isAllowedFile(f.name));
+  if (badType) return json({ error: `"${badType.name}" isn't a PDF or image file.` }, 415);
+
   const apiKey = env.RESEND_API_KEY;
   if (!apiKey) {
     console.error("RESEND_API_KEY is not set — enquiry not sent", { name, phone, email });
     return json({ error: "Our online form is temporarily unavailable." }, 503);
   }
+
+  const attachments = await Promise.all(
+    files.map(async (f) => ({
+      filename: safeFilename(f.name),
+      content: Buffer.from(await f.arrayBuffer()).toString("base64"),
+    })),
+  );
 
   const rows: [string, string][] = [
     ["Name", name],
@@ -56,6 +91,7 @@ export const POST: APIRoute = async ({ request }) => {
     ["Suburb", suburb || "—"],
     ["Needs help with", help],
     ["Message", message || "—"],
+    ["Attachments", files.length ? files.map((f) => `${safeFilename(f.name)} (${formatBytes(f.size)})`).join(", ") : "—"],
     ["Sent from", page || "—"],
   ];
   const text = rows.map(([k, v]) => `${k}: ${v}`).join("\n");
@@ -73,9 +109,10 @@ export const POST: APIRoute = async ({ request }) => {
       from: env.QUOTE_FROM_EMAIL,
       to: [env.QUOTE_TO_EMAIL],
       reply_to: email,
-      subject: `${source}: ${name}${suburb ? ` (${suburb})` : ""} — ${help}`,
+      subject: `${source}: ${name}${suburb ? ` (${suburb})` : ""} — ${help}${files.length ? ` [${files.length} attachment${files.length > 1 ? "s" : ""}]` : ""}`,
       text,
       html,
+      ...(attachments.length ? { attachments } : {}),
     }),
   });
 

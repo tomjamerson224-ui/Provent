@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Toaster } from "@/components/ui/sonner";
+import FileDrop from "@/components/FileDrop";
 import {
   Field,
   FieldContent,
@@ -35,22 +36,27 @@ type Props = {
 export default function QuoteForm({ source, phone, phoneHref }: Props) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const [help, setHelp] = useState(source === "quote" ? "quote" : "");
+  const [files, setFiles] = useState<File[]>([]);
 
   async function onSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form).entries());
+    // Multipart so attachments go up with the text fields; the browser sets
+    // the boundary header itself.
+    const body = new FormData(form);
+    body.delete("files");
+    files.forEach((f) => body.append("files", f, f.name));
+    body.set("help", help);
+    body.set("source", source);
+    body.set("page", window.location.pathname);
     setStatus("sending");
     try {
-      const res = await fetch("/api/quote", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...data, help, source, page: window.location.pathname }),
-      });
-      const body = (await res.json().catch(() => ({}))) as { error?: string };
-      if (!res.ok) throw new Error(body.error || "Something went wrong.");
+      const res = await fetch("/api/quote", { method: "POST", body });
+      const result = (await res.json().catch(() => ({}))) as { error?: string };
+      if (!res.ok) throw new Error(result.error || "Something went wrong.");
       setStatus("sent");
       form.reset();
+      setFiles([]);
     } catch (err) {
       setStatus("idle");
       toast.error("Your request didn't send", {
@@ -126,6 +132,17 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
             <FieldDescription>We reply to every request as quickly as we can.</FieldDescription>
           </Field>
 
+          <Field>
+            <FieldLabel htmlFor={`${source}-files`}>House plans or photos (optional)</FieldLabel>
+            <FileDrop
+              id={`${source}-files`}
+              files={files}
+              onChange={setFiles}
+              onReject={(message) => toast.error("File not added", { description: message })}
+            />
+            <FieldDescription>Floor plans help us size and price your system accurately.</FieldDescription>
+          </Field>
+
           {/* Honeypot — real people never see or fill this. */}
           <div aria-hidden="true" className="absolute -left-[9999px] h-0 overflow-hidden">
             <label>
@@ -136,7 +153,7 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
 
           <Button type="submit" size="xl" disabled={status === "sending"} className="w-full sm:w-auto sm:self-start">
             {status === "sending" ? <Loader2 className="animate-spin" /> : <Send />}
-            {status === "sending" ? "Sending…" : source === "quote" ? "Send my quote request" : "Send message"}
+            {status === "sending" ? (files.length ? "Uploading…" : "Sending…") : source === "quote" ? "Send my quote request" : "Send message"}
           </Button>
         </FieldGroup>
       </form>

@@ -44,6 +44,10 @@ export default defineConfig({
     resolve: {
       dedupe: ['react', 'react-dom'],
     },
+    // Dev only: Vite's SSR dep optimiser intermittently loses @lucide/astro
+    // ("file does not exist in the optimize deps directory") after installs.
+    optimizeDeps: { exclude: ['@lucide/astro'] },
+    ssr: { optimizeDeps: { exclude: ['@lucide/astro'] } },
   },
 
   // 'compile' optimises images with sharp at build time, so no Cloudflare
