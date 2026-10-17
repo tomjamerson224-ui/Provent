@@ -18,7 +18,7 @@
 	},
 	"vars": {
 		// Where quote/contact form submissions are emailed.
-		"QUOTE_TO_EMAIL": "info@proventairconditioning.com.au",
+		"QUOTE_TO_EMAIL": "info@proventac.com.au",
 		// Must be an address on a domain verified in Resend.
 		"QUOTE_FROM_EMAIL": "ProVent Website <website@proventairconditioning.com.au>"
 	}
