@@ -10,6 +10,7 @@ import HowWeWork from "@/components/sections/HowWeWork.astro";
 import ProjectGrid from "@/components/sections/ProjectGrid.astro";
 import BrandStrip from "@/components/sections/BrandStrip.astro";
 import FaqSection from "@/components/sections/FaqSection.astro";
+import LatestGuides from "@/components/sections/LatestGuides.astro";
 import QuoteBand from "@/components/sections/QuoteBand.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import { business, whyProVent } from "@/data/site";
@@ -215,6 +216,8 @@ const service = {
   <BrandStrip />
 
   <FeatureSplit eyebrow="Why choose Pro Vent" title="A local ducted installer you deal with directly" items={whyProVent} image={whyImg} imageAlt="Pro Vent technician beside a ducted outdoor unit" reverse />
+
+  <LatestGuides title="Ducted guides" categories={["Ducted", "Buying guides"]} />
 
   <FaqSection title="Ducted air conditioning FAQs" faqs={ductedFaqs} muted />
 

@@ -1,5 +1,8 @@
 ---
 import SystemPage from "@/components/SystemPage.astro";
+import PriceTable from "@/components/blog/PriceTable.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
 import heroImg from "@/assets/images/family-living-room.webp";
 import whyImg from "@/assets/images/tech-van.webp";
 ---
@@ -31,4 +34,21 @@ import whyImg from "@/assets/images/tech-van.webp";
     { title: "Better air quality", body: "Built-in filters and dehumidifying modes give you cleaner, healthier indoor air." },
   ]}
   projectsTitle="Split system installs"
-/>
+>
+  <section slot="after-benefits" class="py-16 sm:py-24">
+    <div class="container-page grid gap-10 lg:grid-cols-[2fr_1fr] lg:gap-14">
+      <div>
+        <SectionHeading eyebrow="Pricing" title="Split system installation cost in Perth" lead="Supplied and installed with a standard back-to-back install, inc GST. Each range runs from value models to premium Wi-Fi models." />
+        <PriceTable kind="split" />
+      </div>
+      <div class="lg:pt-24">
+        <SectionHeading title="Common extras" />
+        <PriceTable kind="split-addons" caption="On top of the standard install price, inc GST." />
+        <div class="flex flex-col gap-3">
+          <LinkButton href="/blog/split-system-installation-cost-perth" variant="outline" size="lg">Full split system cost guide</LinkButton>
+          <LinkButton href="/blog/multi-head-split-system" variant="outline" size="lg">Multi-head split systems</LinkButton>
+        </div>
+      </div>
+    </div>
+  </section>
+</SystemPage>

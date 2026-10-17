@@ -41,6 +41,7 @@ const p = Astro.props;
   <PageHero eyebrow={p.eyebrow} title={p.title} lead={p.lead} image={p.heroImage} imageAlt={p.heroAlt} focus={p.heroFocus} />
   <FeatureSplit eyebrow={p.eyebrow} title={p.whyTitle} items={p.why} image={p.whyImage} imageAlt={p.whyImageAlt} />
   <BenefitGrid eyebrow="Benefits" title={p.benefitsTitle} items={p.benefits} />
+  <slot name="after-benefits" />
   <FeatureSplit reverse eyebrow="Why choose Pro Vent" title="Local, experienced and easy to deal with" items={whyProVent} image={p.heroImage} imageAlt={p.heroAlt} />
   <HowWeWork />
   <ProjectGrid title={p.projectsTitle} projects={projectsFor(p.category)} />

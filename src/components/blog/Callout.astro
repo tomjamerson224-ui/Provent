@@ -1,0 +1,22 @@
+---
+import { ArrowRight, Phone } from "@lucide/astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { business } from "@/data/site";
+
+interface Props {
+  title?: string;
+  /** Secondary link, e.g. the cost calculator. */
+  href?: string;
+  linkLabel?: string;
+}
+const { title = "Want a price for your home?", href = "/request-a-quote", linkLabel = "Get a free quote" } = Astro.props;
+---
+
+<aside class="not-prose my-10 rounded-2xl bg-ink p-6 text-white sm:p-8">
+  <p class="font-display text-xl font-bold text-white">{title}</p>
+  <div class="mt-2 text-white/75"><slot>Tell us about your home and we'll come back with a price and a free measure-up. No pressure, no hidden costs.</slot></div>
+  <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+    <LinkButton href={href} size="lg" class="h-11 px-5 font-semibold">{linkLabel} <ArrowRight class="size-4" /></LinkButton>
+    <LinkButton href={business.phoneHref} size="lg" variant="outline" class="h-11 border-white/30 bg-white/5 px-5 text-white hover:bg-white/15 hover:text-white"><Phone class="size-4" />{business.phone}</LinkButton>
+  </div>
+</aside>

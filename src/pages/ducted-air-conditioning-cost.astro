@@ -129,6 +129,27 @@ const costFaqs: Faq[] = [
     </div>
   </section>
 
+  <section class="pb-16 sm:pb-24">
+    <div class="container-page grid gap-6 md:grid-cols-2">
+      <div class="rounded-2xl border bg-card p-6 sm:p-8">
+        <h2 class="text-2xl font-bold">How much does ducted air conditioning cost for a 3 bedroom house?</h2>
+        <p class="mt-3 leading-relaxed text-muted-foreground">
+          A 2–3 bedroom single-storey home usually needs a <strong class="text-foreground">{small.kw}</strong> ducted system, which costs
+          <strong class="text-foreground">{bandRange(small)}</strong> supplied and installed. Smaller homes with standard ceilings sit at the lower end; bigger open-plan
+          living areas and west-facing glass push it up. <a href="/blog/what-size-ducted-air-conditioner" class="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4">What size do I need?</a>
+        </p>
+      </div>
+      <div class="rounded-2xl border bg-card p-6 sm:p-8">
+        <h2 class="text-2xl font-bold">How much does ducted air conditioning cost for a 4 bedroom house?</h2>
+        <p class="mt-3 leading-relaxed text-muted-foreground">
+          A typical 4 bedroom single-storey home needs <strong class="text-foreground">{medium.kw}</strong>, costing
+          <strong class="text-foreground">{bandRange(medium)}</strong> installed. Add an AirTouch 5 smart controller for {extraPrice(ductedExtras.airTouch)} and extra zones at about
+          {extraPrice(ductedExtras.zone).replace(" per zone", "")} each. <a href="/blog/how-many-zones-ducted-air-conditioning" class="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4">How many zones do I need?</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
   <section class="bg-muted py-14 sm:py-16">
     <div class="container-page flex max-w-4xl gap-5">
       <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent text-brand-dark"><Home class="size-6" /></span>

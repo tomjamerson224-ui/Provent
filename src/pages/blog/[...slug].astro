@@ -1,0 +1,102 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { Image, getImage } from "astro:assets";
+import { ArrowLeft, ArrowRight, CalendarDays, Clock, UserRound } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import FaqAccordion from "@/components/FaqAccordion.tsx";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import { Badge } from "@/components/ui/badge";
+import { business } from "@/data/site";
+import { faqSchema } from "@/data/ducted";
+
+export const getStaticPaths = (async () => {
+  const posts = await getCollection("blog", ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}) satisfies GetStaticPaths;
+
+const { post } = Astro.props as { post: CollectionEntry<"blog"> };
+const { Content } = await render(post);
+const d = post.data;
+const words = (post.body ?? "").split(/\s+/).length;
+const minutes = Math.max(3, Math.round(words / 220));
+const fmt = (date: Date) => date.toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" });
+const url = new URL(`/blog/${post.id}`, Astro.site).toString();
+const og = await getImage({ src: d.heroImage, width: 1200, height: 630, fit: "cover", format: "jpeg" });
+
+const article = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: d.title,
+  description: d.description,
+  image: new URL(og.src, Astro.site).toString(),
+  datePublished: d.pubDate.toISOString(),
+  dateModified: (d.updatedDate ?? d.pubDate).toISOString(),
+  mainEntityOfPage: url,
+  author: { "@type": "Person", name: "Matt", jobTitle: "Owner & refrigeration mechanic", worksFor: { "@type": "HVACBusiness", name: business.name, url: business.url } },
+  publisher: { "@type": "Organization", name: business.name, url: business.url, logo: { "@type": "ImageObject", url: new URL("/icon-512.png", Astro.site).toString() } },
+};
+---
+
+<Layout
+  title={d.title}
+  description={d.description}
+  ogImage={og.src}
+  breadcrumbs={[
+    { name: "Blog", path: "/blog" },
+    { name: d.title, path: `/blog/${post.id}` },
+  ]}
+  jsonLd={[article, ...(d.faqs.length ? [faqSchema(d.faqs)] : [])]}
+>
+  <article>
+    <header class="bg-ink pt-10 pb-16 text-white sm:pt-14 sm:pb-24">
+      <div class="container-page max-w-3xl">
+        <a href="/blog" class="inline-flex items-center gap-1.5 text-sm text-white/70 hover:text-white"><ArrowLeft class="size-4" /> All articles</a>
+        <Badge className="mt-6 bg-brand text-ink">{d.category}</Badge>
+        <h1 class="mt-4 text-3xl leading-tight font-extrabold text-balance sm:text-5xl">{d.title}</h1>
+        <p class="mt-5 text-lg text-white/80">{d.description}</p>
+        <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-white/70">
+          <span class="flex items-center gap-1.5"><UserRound class="size-4 text-brand" />Matt, Pro Vent Air Conditioning</span>
+          <span class="flex items-center gap-1.5"><CalendarDays class="size-4 text-brand" /><time datetime={(d.updatedDate ?? d.pubDate).toISOString()}>{d.updatedDate ? `Updated ${fmt(d.updatedDate)}` : fmt(d.pubDate)}</time></span>
+          <span class="flex items-center gap-1.5"><Clock class="size-4 text-brand" />{minutes} min read</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="container-page max-w-3xl">
+      <Image
+        src={d.heroImage}
+        alt={d.heroAlt}
+        widths={[640, 960, 1280]}
+        sizes="(min-width: 768px) 48rem, 100vw"
+        loading="eager"
+        fetchpriority="high"
+        class="-mt-10 aspect-[16/9] w-full rounded-2xl object-cover shadow-xl sm:-mt-14"
+      />
+
+      <div class="prose prose-lg mt-10 max-w-none prose-headings:font-display prose-headings:font-bold prose-headings:tracking-tight prose-a:font-medium prose-a:text-foreground prose-a:decoration-brand prose-a:decoration-2 prose-a:underline-offset-4 hover:prose-a:text-brand-dark prose-strong:text-foreground prose-li:marker:text-brand-dark">
+        <Content />
+      </div>
+
+      {d.faqs.length > 0 && (
+        <section class="mt-14">
+          <h2 class="text-2xl font-bold sm:text-3xl">Frequently asked questions</h2>
+          <div class="mt-6"><FaqAccordion client:visible faqs={d.faqs} /></div>
+        </section>
+      )}
+
+      {d.related.length > 0 && (
+        <nav class="mt-14 rounded-2xl border bg-muted/50 p-6" aria-label="Related">
+          <p class="font-semibold">Related</p>
+          <ul class="mt-3 space-y-2">
+            {d.related.map((r) => (
+              <li><a href={r.href} class="inline-flex items-center gap-1.5 font-medium text-brand-dark hover:underline">{r.title} <ArrowRight class="size-4" /></a></li>
+            ))}
+          </ul>
+        </nav>
+      )}
+    </div>
+  </article>
+
+  <div class="mt-16"><QuoteBand /></div>
+</Layout>

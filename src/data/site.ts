@@ -83,6 +83,11 @@ export const services: NavLink[] = [
     description: "What ducted air conditioning costs in Perth and what a good quote should include.",
   },
   {
+    title: "Ceiling Cassette Air Conditioning",
+    href: "/ceiling-cassette-air-conditioning",
+    description: "Discreet in-ceiling heating and cooling for open-plan homes, shops and offices.",
+  },
+  {
     title: "Split System Size Calculator",
     href: "/split-system-size-calculator",
     description: "Work out roughly what size split system your room needs in under a minute.",
@@ -94,6 +99,7 @@ export const mainNav = {
   systems,
   links: [
     { title: "Our Work", href: "/projects" },
+    { title: "Guides", href: "/blog" },
     { title: "About", href: "/about" },
     { title: "Contact", href: "/contact" },
   ],
@@ -104,8 +110,10 @@ export const footerLinks = [
   { title: "Ducted Air Conditioning", href: "/ducted-air-conditioning" },
   { title: "Ducted Cost Guide", href: "/ducted-air-conditioning-cost" },
   { title: "Evaporative to Ducted", href: "/evaporative-to-ducted-reverse-cycle" },
+  { title: "Ceiling Cassettes", href: "/ceiling-cassette-air-conditioning" },
   { title: "Supply & Install", href: "/supply-install" },
   { title: "Service & Repairs", href: "/service-repairs" },
+  { title: "Guides & Advice", href: "/blog" },
   { title: "Our Work", href: "/projects" },
   { title: "Size Calculator", href: "/split-system-size-calculator" },
   { title: "Request a Quote", href: "/request-a-quote" },

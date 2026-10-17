@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
+import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
@@ -10,7 +11,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://proventairconditioning.com.au',
 
-  integrations: [react(), sitemap()],
+  integrations: [react(), mdx(), sitemap()],
 
   // Prefetch internal links on hover/tap so the next page is already loaded.
   prefetch: { prefetchAll: true, defaultStrategy: 'hover' },

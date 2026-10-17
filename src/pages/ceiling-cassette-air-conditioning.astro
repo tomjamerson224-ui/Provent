@@ -1,0 +1,93 @@
+---
+import { ClipboardList, Phone } from "@lucide/astro";
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import FeatureSplit from "@/components/sections/FeatureSplit.astro";
+import BenefitGrid from "@/components/sections/BenefitGrid.astro";
+import HowWeWork from "@/components/sections/HowWeWork.astro";
+import BrandStrip from "@/components/sections/BrandStrip.astro";
+import SystemComparison from "@/components/sections/SystemComparison.astro";
+import FaqSection from "@/components/sections/FaqSection.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { business } from "@/data/site";
+import { faqSchema, type Faq } from "@/data/ducted";
+
+import heroImg from "@/assets/images/banner-consultation.webp";
+import whyImg from "@/assets/images/tech-outdoor-unit-3.webp";
+
+// Pricing deliberately omitted until the owner confirms cassette prices —
+// the page sends people to a quote instead.
+const why = [
+  { title: "Sits flush in the ceiling", body: "Only a slim grille shows — nothing on the walls, which suits modern interiors and rooms with lots of glass." },
+  { title: "Even, multi-directional airflow", body: "Cassettes push air out in several directions from the centre of the room, so large spaces heat and cool more evenly than with a wall unit." },
+  { title: "Great for open-plan spaces", body: "Ideal for big living areas, alfresco-adjoining rooms, shops, offices and anywhere a wall unit would look out of place." },
+];
+
+const benefits = [
+  { title: "Discreet look", body: "Recessed into the ceiling with just a grille visible." },
+  { title: "Wide air throw", body: "Spreads air across the whole room instead of from one wall." },
+  { title: "Frees up wall space", body: "No unit on the wall above your furniture, art or windows." },
+  { title: "Heating and cooling", body: "Reverse cycle — one unit for summer and winter." },
+];
+
+const faqs: Faq[] = [
+  { q: "How much does a ceiling cassette air conditioner cost?", a: "It depends on the size of the unit, the ceiling space and the pipe run to the outdoor unit. Cassettes generally cost more than an equivalent wall-mounted split system because of the extra ceiling work. Send us the room details and we'll give you a fixed written quote." },
+  { q: "Do I need ceiling space for a cassette?", a: "Yes. A cassette is recessed into the ceiling, so it needs enough clearance in the roof or ceiling cavity above the room. We check this when we measure up." },
+  { q: "Cassette or ducted — which is better?", a: "A cassette heats and cools one space, like a large living area or a shop. Ducted air conditioning does the whole home through multiple zones. If you want several rooms done, ducted is usually the better fit." },
+  { q: "Cassette or wall split system?", a: "A wall split is cheaper and simpler to install. A cassette looks cleaner and spreads air more evenly across a large room. For big open-plan spaces where looks matter, a cassette is often worth it." },
+];
+
+const service = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Ceiling cassette air conditioning installation",
+  name: "Ceiling Cassette Air Conditioning Perth",
+  areaServed: { "@type": "City", name: "Perth" },
+  provider: { "@type": "HVACBusiness", name: business.name, url: business.url, telephone: "+61420496791" },
+};
+---
+
+<Layout
+  title="Ceiling Cassette Air Conditioning Perth | Pro Vent"
+  description="Ceiling cassette air conditioners supplied and installed across Perth. Discreet, even heating and cooling for open-plan homes, shops and offices. Free quotes."
+  breadcrumbs={[{ name: "Ceiling Cassette Air Conditioning", path: "/ceiling-cassette-air-conditioning" }]}
+  jsonLd={[service, faqSchema(faqs)]}
+>
+  <PageHero
+    eyebrow="Ceiling cassette air conditioning"
+    title="Ceiling Cassette Air Conditioning Perth"
+    lead="Reverse cycle heating and cooling that sits flush in your ceiling — clean lines, nothing on the walls, and even airflow across large open-plan spaces."
+    image={heroImg}
+    imageAlt="Pro Vent technician reviewing a system design with a homeowner"
+    focus="70% center"
+  />
+
+  <FeatureSplit eyebrow="Why a cassette" title="Why choose a ceiling cassette?" items={why} image={whyImg} imageAlt="Pro Vent technician installing an outdoor unit beside a Perth home" />
+
+  <BenefitGrid eyebrow="Benefits" title="Benefits of ceiling cassette air conditioners" items={benefits} />
+
+  <section class="py-14 sm:py-16">
+    <div class="container-page">
+      <div class="flex flex-col gap-6 rounded-2xl border bg-card p-6 shadow-sm sm:p-8 lg:flex-row lg:items-center lg:justify-between">
+        <div class="flex gap-4">
+          <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent text-brand-dark"><ClipboardList class="size-6" /></span>
+          <div>
+            <h2 class="text-xl font-bold">Ceiling cassette pricing</h2>
+            <p class="mt-1 max-w-2xl text-muted-foreground">Cassette prices depend on the unit size, the ceiling space and the pipe run to the outdoor unit, so we price every job individually. Send us the room size and a photo of the space and we'll come back with a fixed written quote.</p>
+          </div>
+        </div>
+        <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
+          <LinkButton href="/request-a-quote" size="xl">Get a cassette quote</LinkButton>
+          <LinkButton href={business.phoneHref} size="xl" variant="outline"><Phone class="size-4" />{business.phone}</LinkButton>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SystemComparison />
+  <HowWeWork />
+  <BrandStrip />
+  <FaqSection title="Ceiling cassette FAQs" faqs={faqs} muted />
+  <QuoteBand />
+</Layout>

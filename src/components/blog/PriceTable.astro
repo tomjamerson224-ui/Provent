@@ -1,0 +1,63 @@
+---
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { bandRange, ductedBands, extraPrice, extrasList } from "@/data/ducted";
+import { multiHeadBands, range, splitAddons, splitBands, money } from "@/data/split";
+
+interface Props {
+  /** Which data set to render. */
+  kind: "ducted" | "ducted-extras" | "split" | "multi-head" | "split-addons";
+  caption?: string;
+}
+const { kind, caption } = Astro.props;
+
+let head: string[] = [];
+let rows: string[][] = [];
+switch (kind) {
+  case "ducted":
+    head = ["Home", "System size", "Installed price"];
+    rows = ductedBands.map((b) => [b.label, b.kw ?? "—", bandRange(b)]);
+    break;
+  case "ducted-extras":
+    head = ["Add-on", "Price"];
+    rows = extrasList.map((e) => [e.label, extraPrice(e)]);
+    break;
+  case "split":
+    head = ["Size", "Room size", "Suits", "Installed price"];
+    rows = splitBands.map((b) => [b.label, b.room, b.suits, range(b)]);
+    break;
+  case "multi-head":
+    head = ["System", "Installed price"];
+    rows = multiHeadBands.map((b) => [`${b.heads}${b.plus ? "+" : ""} indoor heads, 1 outdoor unit`, range(b)]);
+    break;
+  case "split-addons":
+    head = ["Add-on", "Price"];
+    rows = splitAddons.map((a) => [a.label, `${a.from ? "from " : ""}+${money(a.price)}`]);
+    break;
+}
+---
+
+<figure class="not-prose my-8">
+  <div class="overflow-hidden rounded-xl border bg-card">
+    <Table>
+      <TableHeader>
+        <TableRow className="bg-muted/60 hover:bg-muted/60">
+          {head.map((h, i) => <TableHead className={i === 0 ? "py-3 pl-4 font-semibold" : "py-3 font-semibold"}>{h}</TableHead>)}
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {rows.map((row) => (
+          <TableRow>
+            {row.map((cell, i) =>
+              i === 0 ? (
+                <TableHead scope="row" className="h-auto py-3 pl-4 font-medium whitespace-normal text-foreground">{cell}</TableHead>
+              ) : (
+                <TableCell className={`py-3 whitespace-normal${i === row.length - 1 ? " font-semibold" : ""}`}>{cell}</TableCell>
+              ),
+            )}
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </div>
+  <figcaption class="mt-2 text-sm text-muted-foreground">{caption ?? "Supply and install, inc GST. A guide only — your fixed written quote follows a free measure-up."}</figcaption>
+</figure>
