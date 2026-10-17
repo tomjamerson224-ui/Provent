@@ -1,0 +1,5 @@
+﻿{
+  "Description": "Domain ownership verification file for Microsoft 365 - place in the website root",
+  "Domain": "proventairconditioning.com.au",
+  "Id": "84590431-f69d-4565-85cb-a7a23e5b7a7a"
+}
