@@ -1,7 +1,7 @@
 /** Local area pages — used by the /areas hub, area pages' "Nearby areas" and the footer. */
 export const areas = [
-  { title: "Kalamunda & Perth Hills", href: "/air-conditioning-kalamunda", blurb: "Kalamunda, Lesmurdie, Gooseberry Hill, Forrestfield, High Wycombe and the Shire of Kalamunda." },
-  { title: "Mundaring & Eastern Hills", href: "/air-conditioning-mundaring", blurb: "Mundaring, Darlington, Glen Forrest, Greenmount, Parkerville, Stoneville and Chidlow." },
-  { title: "Roleystone & Armadale Hills", href: "/air-conditioning-roleystone-armadale", blurb: "Roleystone, Karragullen, Bedfordale, Kelmscott, Armadale and the southern Hills." },
-  { title: "Byford & Serpentine–Jarrahdale", href: "/air-conditioning-byford", blurb: "Byford, Whitby, Mundijong, Oakford, Darling Downs, Serpentine and Jarrahdale." },
+  { title: "Kalamunda & Perth Hills", href: "/air-conditioning-kalamunda", blurb: "Kalamunda, Lesmurdie, Gooseberry Hill, Forrestfield, High Wycombe and the Shire of Kalamunda.", intro: "Where we do a lot of our work. Colder Hills winters, bushfire smoke season and older homes with tight roof spaces make ducted reverse cycle the go-to — and difficult installs are our specialty." },
+  { title: "Mundaring & Eastern Hills", href: "/air-conditioning-mundaring", blurb: "Mundaring, Darlington, Glen Forrest, Greenmount, Parkerville, Stoneville and Chidlow.", intro: "Some of the coldest winter nights around Perth. Reverse cycle can take over from a single wood heater and warm the whole house, and bush blocks need the outdoor unit placed with care." },
+  { title: "Roleystone & Armadale Hills", href: "/air-conditioning-roleystone-armadale", blurb: "Roleystone, Karragullen, Bedfordale, Kelmscott, Armadale and the southern Hills.", intro: "From steep hillside blocks in Roleystone and Bedfordale to newer estates in Armadale. We plan around slopes and split levels, and swap a lot of old evaporative coolers for reverse cycle." },
+  { title: "Byford & Serpentine–Jarrahdale", href: "/air-conditioning-byford", blurb: "Byford, Whitby, Mundijong, Oakford, Darling Downs, Serpentine and Jarrahdale.", intro: "New homes in Byford and Whitby that came without air con — we can quote from the builder's plans — plus acreage in Oakford, Darling Downs and Jarrahdale with sheds, studios and three-phase power." },
 ];
