@@ -42,7 +42,7 @@ const initials = (name: string) => name.split(/\s+/).map((p) => p[0]).join("").s
           </div>
         </div>
       </div>
-      <ul class="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      <ul class:list={["mt-10 grid gap-5 md:grid-cols-2", reviews.length > 2 && "lg:grid-cols-4"]}>
         {reviews.map((r) => (
           <li class="flex flex-col rounded-2xl border bg-card p-6">
             <span class="flex text-brand" role="img" aria-label={`${r.rating} out of 5 stars`}>{Array.from({ length: Math.round(r.rating) }).map(() => <Star class="size-4 fill-current" />)}</span>

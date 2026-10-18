@@ -1,0 +1,175 @@
+---
+/**
+ * Shared template for local area pages (Kalamunda, Mundaring, Roleystone,
+ * Byford…). Every page must bring its own genuinely local content — the
+ * `factors`, intro, suburbs and FAQs — so these never become swapped-suburb
+ * doorway pages. Prices come from src/data/ducted.ts.
+ */
+import { ArrowRight, MapPin, Wrench } from "@lucide/astro";
+import type { ImageMetadata } from "astro";
+import Layout from "@/layouts/Layout.astro";
+import PageHero from "@/components/sections/PageHero.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
+import { Image } from "astro:assets";
+import GoogleReviews from "@/components/sections/GoogleReviews.astro";
+import FaqSection from "@/components/sections/FaqSection.astro";
+import QuoteBand from "@/components/sections/QuoteBand.astro";
+import LinkButton from "@/components/LinkButton.astro";
+import { business } from "@/data/site";
+import { areas } from "@/data/areas";
+import { bandRange, ductedBands, ductedExtras, extraPrice, faqSchema, installTimes, type Faq } from "@/data/ducted";
+import evapImg from "@/assets/images/evaporative-roof-unit.webp";
+
+type Factor = { icon: any; title: string; body: string };
+
+interface Props {
+  path: string;
+  /** Short area name, e.g. "Kalamunda" — used in headings like "…in Kalamunda". */
+  area: string;
+  seoTitle: string;
+  seoDescription: string;
+  breadcrumb: string;
+  eyebrow: string;
+  title: string;
+  lead: string;
+  heroImage: ImageMetadata;
+  heroAlt: string;
+  heroFocus?: string;
+  factorsTitle: string;
+  factorsLead: string;
+  factors: Factor[];
+  services: { title: string; body: string; href: string }[];
+  /** Optional evaporative-swap block (most Hills areas). */
+  evapLead?: string;
+  suburbGroups: { title: string; suburbs: string[] }[];
+  tricky: { title: string; body: string };
+  /** Area-specific intro for the pricing panel. */
+  pricingLead: string;
+  faqs: Faq[];
+}
+const p = Astro.props;
+const [small, medium, large] = ductedBands;
+const otherAreas = areas.filter((a) => a.href !== p.path);
+
+const service = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  serviceType: "Air conditioning installation",
+  name: p.title,
+  provider: { "@type": "HVACBusiness", name: business.name, url: business.url, telephone: "+61420496791" },
+  areaServed: p.suburbGroups.flatMap((g) => g.suburbs).map((name) => ({ "@type": "Place", name: `${name}, WA` })),
+};
+---
+
+<Layout title={p.seoTitle} description={p.seoDescription} breadcrumbs={[{ name: "Service areas", path: "/areas" }, { name: p.breadcrumb, path: p.path }]} jsonLd={[service, faqSchema(p.faqs)]}>
+  <PageHero eyebrow={p.eyebrow} title={p.title} lead={p.lead} image={p.heroImage} imageAlt={p.heroAlt} focus={p.heroFocus ?? "70% center"} />
+
+  <section class="py-16 sm:py-24">
+    <div class="container-page">
+      <SectionHeading eyebrow="What's different here" title={p.factorsTitle} lead={p.factorsLead} />
+      <div class:list={["mt-10 grid gap-4 sm:grid-cols-2", p.factors.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4"]}>
+        {p.factors.map(({ icon: Icon, title, body }) => (
+          <div class="rounded-2xl border bg-card p-6">
+            <span class="flex size-11 items-center justify-center rounded-xl bg-accent text-brand-dark"><Icon class="size-5" /></span>
+            <h3 class="mt-4 text-lg font-semibold">{title}</h3>
+            <p class="mt-2 text-[0.95rem] leading-relaxed text-muted-foreground">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-muted py-16 sm:py-24">
+    <div class="container-page">
+      <SectionHeading eyebrow="Services" title={`Air conditioning services in ${p.area}`} />
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {p.services.map((s) => (
+          <a href={s.href} class="group flex flex-col rounded-2xl bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
+            <h3 class="text-lg font-semibold">{s.title}</h3>
+            <p class="mt-2 flex-1 text-[0.95rem] text-muted-foreground">{s.body}</p>
+            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-dark">Learn more <ArrowRight class="size-4 transition-transform group-hover:translate-x-1" /></span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {p.evapLead && (
+    <section class="py-16 sm:py-20">
+      <div class="container-page grid items-center gap-10 lg:grid-cols-[3fr_2fr] lg:gap-14">
+        <div>
+          <SectionHeading eyebrow="Evaporative to ducted" title="Retiring the old evaporative cooler?" lead={p.evapLead} />
+          <p class="mt-4 text-muted-foreground">Removal is {extraPrice(ductedExtras.evapRemoval)} including tile patching, and the changeover is {installTimes.withEvapRemoval}.</p>
+          <LinkButton href="/evaporative-to-ducted-reverse-cycle" variant="outline" size="lg" class="mt-6">How evaporative conversions work <ArrowRight class="size-4" /></LinkButton>
+        </div>
+        <Image src={evapImg} alt="Old evaporative cooler on a tiled roof" widths={[480, 720]} sizes="(min-width: 1024px) 35vw, 100vw" class="aspect-[4/3] w-full rounded-2xl object-cover" />
+      </div>
+    </section>
+  )}
+
+  <section class="bg-ink py-16 text-white sm:py-24">
+    <div class="container-page grid gap-10 lg:grid-cols-2 lg:gap-16">
+      <div>
+        <SectionHeading tone="dark" eyebrow="Pricing" title={`What ducted costs in ${p.area}`} lead={p.pricingLead} />
+        <LinkButton href="/ducted-air-conditioning-cost" size="xl" class="mt-8">Ducted cost calculator <ArrowRight class="size-4" /></LinkButton>
+      </div>
+      <ul class="divide-y divide-white/10 self-center rounded-2xl border border-white/10 bg-white/5">
+        {ductedBands.filter((b) => !b.inspect).map((b) => (
+          <li class="flex items-center justify-between gap-4 p-5">
+            <span class="font-medium text-white">{b.label} <span class="text-sm text-ink-muted">· {b.kw}</span></span>
+            <span class="font-display text-lg font-bold text-brand">{bandRange(b)}</span>
+          </li>
+        ))}
+        <li class="flex items-center justify-between gap-4 p-5">
+          <span class="font-medium text-white">AirTouch 5 smart control</span>
+          <span class="font-display text-lg font-bold text-brand">{extraPrice(ductedExtras.airTouch)}</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-24">
+    <div class="container-page grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
+      <div>
+        <SectionHeading eyebrow="Where we work" title={`Suburbs we cover around ${p.area}`} />
+        <p class="mt-4 text-muted-foreground">Not on the list? <a href="/request-a-quote" class="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4">Send us your suburb</a> and we'll confirm. See all our <a href="/areas" class="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4">service areas</a>.</p>
+      </div>
+      <div class="flex flex-col gap-6">
+        {p.suburbGroups.map((g) => (
+          <div>
+            <h3 class="font-semibold">{g.title}</h3>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              {g.suburbs.map((s) => <li class="flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm"><MapPin class="size-3.5 text-brand-dark" />{s}</li>)}
+            </ul>
+          </div>
+        ))}
+        {otherAreas.length > 0 && (
+          <div>
+            <h3 class="font-semibold">Nearby areas</h3>
+            <ul class="mt-3 flex flex-wrap gap-2">
+              {otherAreas.map((a) => <li><a href={a.href} class="flex items-center gap-1.5 rounded-full border border-brand bg-accent px-3 py-1.5 text-sm font-medium hover:bg-brand">{a.title} <ArrowRight class="size-3.5" /></a></li>)}
+            </ul>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <GoogleReviews title={`What customers say about Pro Vent`} limit={2} muted />
+
+  <section class="py-14">
+    <div class="container-page flex flex-col items-start gap-5 rounded-2xl border bg-card p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+      <div class="flex gap-4">
+        <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent text-brand-dark"><Wrench class="size-6" /></span>
+        <div>
+          <p class="text-xl font-bold">{p.tricky.title}</p>
+          <p class="mt-1 text-muted-foreground">{p.tricky.body}</p>
+        </div>
+      </div>
+      <LinkButton href="/request-a-quote" size="xl" class="shrink-0">Send photos for a quote</LinkButton>
+    </div>
+  </section>
+
+  <FaqSection title={`${p.breadcrumb} air conditioning FAQs`} faqs={p.faqs} />
+  <QuoteBand title={`Get a free quote in ${p.area}`} lead="Tell us your suburb and about your home — we'll come back with a price and book a free measure-up." />
+</Layout>

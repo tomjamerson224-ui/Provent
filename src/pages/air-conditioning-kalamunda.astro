@@ -1,209 +1,55 @@
 ---
-import { ArrowRight, Flame, House, MapPin, Mountain, Snowflake, Wrench } from "@lucide/astro";
-import Layout from "@/layouts/Layout.astro";
-import PageHero from "@/components/sections/PageHero.astro";
-import SectionHeading from "@/components/sections/SectionHeading.astro";
-import FeatureSplit from "@/components/sections/FeatureSplit.astro";
-import GoogleReviews from "@/components/sections/GoogleReviews.astro";
-import HowWeWork from "@/components/sections/HowWeWork.astro";
-import FaqSection from "@/components/sections/FaqSection.astro";
-import QuoteBand from "@/components/sections/QuoteBand.astro";
-import LinkButton from "@/components/LinkButton.astro";
-import { business } from "@/data/site";
-import { bandRange, ductedBands, ductedExtras, extraPrice, faqSchema, installTimes, type Faq } from "@/data/ducted";
-
+import { Flame, House, Mountain, Snowflake } from "@lucide/astro";
+import AreaPage from "@/components/AreaPage.astro";
+import { bandRange, ductedBands, ductedExtras, extraPrice, installTimes, type Faq } from "@/data/ducted";
 import heroImg from "@/assets/images/banner-van-customers.webp";
-import evapImg from "@/assets/images/evaporative-roof-unit.webp";
 
-/*
- * Genuine local page for the Kalamunda / Perth Hills area (owner: "lots of
- * experience in the Kalamunda area", "specialise in difficult jobs"). Kept
- * specific to Hills homes so it isn't a swapped-suburb doorway page.
- * TODO(owner): confirm the suburb list and add a Hills project when there's one.
- */
-
-// Shire of Kalamunda localities, then nearby Hills suburbs.
-const kalamundaSuburbs = [
+// Owner: "lots of experience in the Kalamunda area", "specialise in difficult jobs".
+// TODO(owner): confirm the suburb list; add a Hills project when there's one.
+const suburbs = [
   "Kalamunda", "Lesmurdie", "Gooseberry Hill", "Walliston", "Bickley", "Carmel", "Paulls Valley",
   "Pickering Brook", "Piesse Brook", "Hacketts Gully", "Canning Mills", "Forrestfield", "High Wycombe",
   "Maida Vale", "Wattle Grove",
 ];
-const nearbyHills = ["Darlington", "Glen Forrest", "Greenmount", "Helena Valley", "Boya", "Mundaring"];
-
 const [small, medium, large] = ductedBands;
 
-const hillsFactors = [
-  {
-    icon: Snowflake,
-    title: "Colder winters",
-    body: "Hills nights get noticeably colder than down on the coastal plain, so heating matters as much as cooling. Reverse cycle does both from one system — ducted heats every room, not just the lounge.",
-  },
-  {
-    icon: Flame,
-    title: "Bushfire smoke season",
-    body: "Evaporative coolers pull outside air through the house, smoke and all. Reverse cycle cools with the windows and doors shut, which makes a real difference on smoky summer days.",
-  },
-  {
-    icon: House,
-    title: "Older and character homes",
-    body: "Raked ceilings, tight or low-pitched roof spaces, additions built at different times — older Hills homes often need ductwork planned around them. Difficult jobs are what we do.",
-  },
-  {
-    icon: Mountain,
-    title: "Sloping and split-level blocks",
-    body: "Split-level homes and sloping blocks change where the outdoor unit can go and how the ducts and pipes run. We plan it on site rather than guessing.",
-  },
-];
-
-const services = [
-  { title: "Ducted air conditioning", body: "Whole-home reverse cycle heating and cooling, zoned so you only run the rooms you're using.", href: "/ducted-air-conditioning" },
-  { title: "Evaporative to ducted", body: `Swap the old roof cooler for reverse cycle — removal ${extraPrice(ductedExtras.evapRemoval)} including tile patching, usually done in a day.`, href: "/evaporative-to-ducted-reverse-cycle" },
-  { title: "Split systems", body: "Targeted heating and cooling for bedrooms, studios and extensions.", href: "/split-system-air-conditioning" },
-  { title: "Service & repairs", body: "Fault-finding and repairs on all brands, including older systems.", href: "/service-repairs" },
-];
-
 const faqs: Faq[] = [
-  { q: "Do you install air conditioning in Kalamunda and the Hills?", a: `Yes — we've done a lot of work in Kalamunda and the surrounding Hills, including ${kalamundaSuburbs.slice(1, 6).join(", ")} and nearby suburbs. Send us your suburb with a quote request and we'll confirm.` },
+  { q: "Do you install air conditioning in Kalamunda and the Hills?", a: `Yes — we've done a lot of work in Kalamunda and the surrounding Hills, including ${suburbs.slice(1, 6).join(", ")} and nearby suburbs. Send us your suburb with a quote request and we'll confirm.` },
   { q: "What's the best air conditioning for a Hills home?", a: "For most Hills homes we recommend ducted reverse cycle: it heats every room through colder Hills winters, cools with the windows shut on smoky summer days, and zoning keeps running costs down. Split systems suit smaller homes or single rooms." },
   { q: "Can you replace my evaporative cooler in the Hills?", a: `Yes. Removing the evaporative cooler is ${extraPrice(ductedExtras.evapRemoval)}, including patching the tiles with your spare tiles (or capping the dropper). Metal roofs need the sheets patched: ${extraPrice(ductedExtras.roofSheets)}. The whole changeover is ${installTimes.withEvapRemoval}.` },
   { q: "My house is older with a tight roof space — can you still install ducted?", a: "Often, yes. Tight roof spaces, raked ceilings and add-on extensions are common in the Hills, and difficult installs are our specialty. We'll inspect the roof space and tell you honestly what's possible before you commit." },
-  { q: "How much does ducted air conditioning cost in Kalamunda?", a: `As a guide: ${bandRange(small)} for a 2–3 bedroom home, ${bandRange(medium)} for 4 bedrooms and ${bandRange(large)} for 5+, supplied and installed. Double-storey and split-level homes need an inspection first. You get a fixed written quote after a free measure-up.` },
   { q: "Is reverse cycle heating good enough for Hills winters?", a: "Yes. Modern inverter reverse cycle systems heat efficiently in Perth's winter conditions, including the Hills, and ducted spreads that heat through every zone you have switched on." },
 ];
-
-const service = {
-  "@context": "https://schema.org",
-  "@type": "Service",
-  serviceType: "Air conditioning installation",
-  name: "Air Conditioning Kalamunda & Perth Hills",
-  provider: { "@type": "HVACBusiness", name: business.name, url: business.url, telephone: "+61420496791" },
-  areaServed: [...kalamundaSuburbs, ...nearbyHills].map((name) => ({ "@type": "Place", name: `${name}, WA` })),
-};
 ---
 
-<Layout
-  title="Air Conditioning Kalamunda & Perth Hills | Pro Vent"
-  description="Ducted, split and evaporative-to-ducted air conditioning installed in Kalamunda, Lesmurdie, Forrestfield and across the Perth Hills. Family-owned, ARCtick licensed."
-  breadcrumbs={[{ name: "Kalamunda & Perth Hills", path: "/air-conditioning-kalamunda" }]}
-  jsonLd={[service, faqSchema(faqs)]}
->
-  <PageHero
-    eyebrow="Kalamunda & the Perth Hills"
-    title="Air Conditioning Kalamunda & the Perth Hills"
-    lead="Ducted reverse cycle specialists with years of experience in Kalamunda and the Hills — heating for cold Hills winters, cooling with the windows shut on smoky summer days, and the know-how for older homes and tricky roof spaces."
-    image={heroImg}
-    imageAlt="Pro Vent technician talking with homeowners beside the work van"
-    focus="70% center"
-  />
-
-  <section class="py-16 sm:py-24">
-    <div class="container-page">
-      <SectionHeading
-        eyebrow="Why the Hills are different"
-        title="Air conditioning for Hills homes"
-        lead="Up in the Hills, homes deal with things the coastal suburbs don't. Here's what we plan for on every Kalamunda and Hills job."
-      />
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {hillsFactors.map(({ icon: Icon, title, body }) => (
-          <div class="rounded-2xl border bg-card p-6">
-            <span class="flex size-11 items-center justify-center rounded-xl bg-accent text-brand-dark"><Icon class="size-5" /></span>
-            <h3 class="mt-4 text-lg font-semibold">{title}</h3>
-            <p class="mt-2 text-[0.95rem] leading-relaxed text-muted-foreground">{body}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="bg-muted py-16 sm:py-24">
-    <div class="container-page">
-      <SectionHeading eyebrow="What we do in the Hills" title="Air conditioning services in Kalamunda" />
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {services.map((s) => (
-          <a href={s.href} class="group flex flex-col rounded-2xl bg-card p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-            <h3 class="text-lg font-semibold">{s.title}</h3>
-            <p class="mt-2 flex-1 text-[0.95rem] text-muted-foreground">{s.body}</p>
-            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-dark">Learn more <ArrowRight class="size-4 transition-transform group-hover:translate-x-1" /></span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <FeatureSplit
-    eyebrow="Evaporative to ducted"
-    title="Retiring the old evaporative cooler?"
-    lead="Plenty of Hills homes still have an evaporative unit on the roof. Swapping it for ducted reverse cycle gives you winter heating and smoke-free summer cooling."
-    items={[
-      { title: "Removal and roof patching", body: `${extraPrice(ductedExtras.evapRemoval)} to remove the cooler, including tile patching with your spare tiles. Metal roofs: ${extraPrice(ductedExtras.roofSheets)} for the sheets.` },
-      { title: "New insulated ducting", body: "The old evaporative ducts are too big for reverse cycle, so new ducting goes in. The outlets can stay where they are if you'd rather not patch the ceiling." },
-      { title: "Usually done in a day", body: `The whole changeover is ${installTimes.withEvapRemoval}.` },
-    ]}
-    image={evapImg}
-    imageAlt="Old evaporative cooler on a tiled roof"
-    muted={false}
-  />
-
-  <section class="bg-ink py-16 text-white sm:py-24">
-    <div class="container-page grid gap-10 lg:grid-cols-2 lg:gap-16">
-      <div>
-        <SectionHeading tone="dark" eyebrow="Pricing" title="What ducted costs in Kalamunda" lead="Typical supplied-and-installed prices for single-storey homes, inc GST. Split-level and double-storey homes need an inspection first." />
-        <LinkButton href="/ducted-air-conditioning-cost" size="xl" class="mt-8">Ducted cost calculator <ArrowRight class="size-4" /></LinkButton>
-      </div>
-      <ul class="divide-y divide-white/10 self-center rounded-2xl border border-white/10 bg-white/5">
-        {ductedBands.filter((b) => !b.inspect).map((b) => (
-          <li class="flex items-center justify-between gap-4 p-5">
-            <span class="font-medium text-white">{b.label} <span class="text-sm text-ink-muted">· {b.kw}</span></span>
-            <span class="font-display text-lg font-bold text-brand">{bandRange(b)}</span>
-          </li>
-        ))}
-        <li class="flex items-center justify-between gap-4 p-5">
-          <span class="font-medium text-white">AirTouch 5 smart control</span>
-          <span class="font-display text-lg font-bold text-brand">{extraPrice(ductedExtras.airTouch)}</span>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <section class="py-16 sm:py-24">
-    <div class="container-page grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
-      <div>
-        <SectionHeading eyebrow="Where we work" title="Hills suburbs we cover" />
-        <p class="mt-4 text-muted-foreground">Not on the list? We also cover the Perth CBD and surrounding suburbs — <a href="/request-a-quote" class="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4">send us your suburb</a> and we'll confirm.</p>
-      </div>
-      <div class="flex flex-col gap-6">
-        <div>
-          <h3 class="font-semibold">Shire of Kalamunda</h3>
-          <ul class="mt-3 flex flex-wrap gap-2">
-            {kalamundaSuburbs.map((s) => <li class="flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm"><MapPin class="size-3.5 text-brand-dark" />{s}</li>)}
-          </ul>
-        </div>
-        <div>
-          <h3 class="font-semibold">Nearby Hills suburbs</h3>
-          <ul class="mt-3 flex flex-wrap gap-2">
-            {nearbyHills.map((s) => <li class="flex items-center gap-1.5 rounded-full border bg-card px-3 py-1.5 text-sm"><MapPin class="size-3.5 text-brand-dark" />{s}</li>)}
-          </ul>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <GoogleReviews title="What our customers say" limit={4} muted />
-
-  <section class="py-14">
-    <div class="container-page flex flex-col items-start gap-5 rounded-2xl border bg-card p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-      <div class="flex gap-4">
-        <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent text-brand-dark"><Wrench class="size-6" /></span>
-        <div>
-          <p class="text-xl font-bold">Got a tricky Hills home?</p>
-          <p class="mt-1 text-muted-foreground">Tight roof space, raked ceilings or a split-level block — send us photos or plans with your quote request and we'll tell you what's possible.</p>
-        </div>
-      </div>
-      <LinkButton href="/request-a-quote" size="xl" class="shrink-0">Send photos for a quote</LinkButton>
-    </div>
-  </section>
-
-  <HowWeWork />
-  <FaqSection title="Kalamunda & Hills air conditioning FAQs" faqs={faqs} />
-  <QuoteBand title="Get a free quote in the Hills" lead="Tell us your suburb and about your home — we'll come back with a price and book a free measure-up." />
-</Layout>
+<AreaPage
+  path="/air-conditioning-kalamunda"
+  area="Kalamunda"
+  breadcrumb="Kalamunda & Perth Hills"
+  seoTitle="Air Conditioning Kalamunda & Perth Hills | Pro Vent"
+  seoDescription="Ducted, split and evaporative-to-ducted air conditioning installed in Kalamunda, Lesmurdie, Forrestfield and across the Perth Hills. Family-owned, ARCtick licensed."
+  eyebrow="Kalamunda & the Perth Hills"
+  title="Air Conditioning Kalamunda & the Perth Hills"
+  lead="Ducted reverse cycle specialists with years of experience in Kalamunda and the Hills — heating for cold Hills winters, cooling with the windows shut on smoky summer days, and the know-how for older homes and tricky roof spaces."
+  heroImage={heroImg}
+  heroAlt="Pro Vent technician talking with homeowners beside the work van"
+  factorsTitle="Air conditioning for Hills homes"
+  factorsLead="Up in the Hills, homes deal with things the coastal suburbs don't. Here's what we plan for on every Kalamunda and Hills job."
+  factors={[
+    { icon: Snowflake, title: "Colder winters", body: "Hills nights get noticeably colder than down on the coastal plain, so heating matters as much as cooling. Reverse cycle does both from one system — ducted heats every room, not just the lounge." },
+    { icon: Flame, title: "Bushfire smoke season", body: "Evaporative coolers pull outside air through the house, smoke and all. Reverse cycle cools with the windows and doors shut, which makes a real difference on smoky summer days." },
+    { icon: House, title: "Older and character homes", body: "Raked ceilings, tight or low-pitched roof spaces, additions built at different times — older Hills homes often need ductwork planned around them. Difficult jobs are what we do." },
+    { icon: Mountain, title: "Sloping and split-level blocks", body: "Split-level homes and sloping blocks change where the outdoor unit can go and how the ducts and pipes run. We plan it on site rather than guessing." },
+  ]}
+  services={[
+    { title: "Ducted air conditioning", body: "Whole-home reverse cycle heating and cooling, zoned so you only run the rooms you're using.", href: "/ducted-air-conditioning" },
+    { title: "Evaporative to ducted", body: `Swap the old roof cooler for reverse cycle — removal ${extraPrice(ductedExtras.evapRemoval)} including tile patching, usually done in a day.`, href: "/evaporative-to-ducted-reverse-cycle" },
+    { title: "Split systems", body: "Targeted heating and cooling for bedrooms, studios and extensions.", href: "/split-system-air-conditioning" },
+    { title: "Service & repairs", body: "Fault-finding and repairs on all brands, including older systems.", href: "/service-repairs" },
+  ]}
+  evapLead="Plenty of Hills homes still have an evaporative unit on the roof. Swapping it for ducted reverse cycle gives you winter heating and smoke-free summer cooling."
+  suburbGroups={[{ title: "Shire of Kalamunda", suburbs }]}
+  tricky={{ title: "Got a tricky Hills home?", body: "Tight roof space, raked ceilings or a split-level block — send us photos or plans with your quote request and we'll tell you what's possible." }}
+  pricingLead="Typical installed prices for single-storey homes, inc GST. Split-level Hills homes and double-storeys need an inspection first, as the layout decides what's possible."
+  faqs={faqs}
+/>

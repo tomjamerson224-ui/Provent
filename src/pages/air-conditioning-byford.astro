@@ -1,0 +1,55 @@
+---
+import { Home, PlugZap, Sun, Tractor } from "@lucide/astro";
+import AreaPage from "@/components/AreaPage.astro";
+import { bandRange, ductedBands, ductedExtras, extraPrice, type Faq } from "@/data/ducted";
+import heroImg from "@/assets/images/banner-consultation.webp";
+
+// Down to Jarrahdale and inland around Oakford (owner's direction).
+// TODO(owner): confirm the suburb list; add a Byford/acreage project when there's one.
+const estates = ["Byford", "Whitby", "Mundijong", "Cardup"];
+const rural = ["Oakford", "Darling Downs", "Oldbury", "Serpentine", "Jarrahdale", "Keysbrook"];
+const [small, medium, large] = ductedBands;
+
+const faqs: Faq[] = [
+  { q: "Do you install air conditioning in Byford and Serpentine–Jarrahdale?", a: "Yes — Byford, Whitby, Mundijong and Cardup, plus acreage areas like Oakford, Darling Downs, Oldbury, Serpentine and down to Jarrahdale. Send us your suburb with a quote request and we'll confirm." },
+  { q: "My new Byford home has no air con — can you add ducted?", a: "Yes. New homes usually have good roof access, which makes adding ducted after handover straightforward. Attach your builder's plans to the quote request and we can size and price it accurately." },
+  { q: "Can you quote from my builder's plans before I move in?", a: "Yes. With the house plans we can recommend the right system and zone layout and give you a price, so it's sorted before or soon after handover." },
+  { q: "Do I need three-phase power for ducted air conditioning?", a: "Not usually for an average home. Larger ducted systems come in single-phase and three-phase versions, and many acreage properties already have three-phase power. We check your switchboard and supply as part of the quote." },
+  { q: "Can you air-condition a shed, workshop or granny flat on acreage?", a: "Yes. Split systems are ideal for sheds, workshops, studios and granny flats, and we plan them alongside ducted for the main house so each building gets the right system." },
+];
+---
+
+<AreaPage
+  path="/air-conditioning-byford"
+  area="Byford"
+  breadcrumb="Byford & Serpentine–Jarrahdale"
+  seoTitle="Air Conditioning Byford, Serpentine & Jarrahdale | Pro Vent"
+  seoDescription="Ducted and split system air conditioning for Byford, Whitby, Mundijong, Oakford, Darling Downs, Serpentine and Jarrahdale — new homes and acreage properties."
+  eyebrow="Byford & Serpentine–Jarrahdale"
+  title="Air Conditioning Byford, Serpentine & Jarrahdale"
+  lead="From brand-new homes in Byford and Whitby to acreage in Oakford, Darling Downs and Jarrahdale — ducted reverse cycle for the house, split systems for the sheds and studios, and quotes straight from your builder's plans."
+  heroImage={heroImg}
+  heroAlt="Pro Vent technician reviewing a system design with a homeowner on a laptop"
+  factorsTitle="Air conditioning for new estates and acreage"
+  factorsLead="The Serpentine–Jarrahdale area is a mix of fast-growing estates and rural properties, and each needs a different approach."
+  factors={[
+    { icon: Home, title: "New homes in Byford & Whitby", body: "Plenty of new homes are handed over without air con, or with a single split. Ducted is straightforward to add to a new home — and with your builder's plans we can price it before you move in." },
+    { icon: Tractor, title: "Acreage and rural properties", body: "Bigger homes in Oakford, Darling Downs and Serpentine, plus sheds, workshops and granny flats. We plan ducted for the house and split systems for the outbuildings." },
+    { icon: PlugZap, title: "Power supply", body: "Larger ducted systems come in single- and three-phase versions, and many acreage properties have three-phase power. We check your switchboard and supply as part of the quote." },
+    { icon: Sun, title: "Hot summers, cold nights", body: "Inland summers run hot, and winter nights out here — especially in the Jarrahdale hills — get cold. Reverse cycle handles both from one system." },
+  ]}
+  services={[
+    { title: "Ducted reverse cycle", body: "Whole-home heating and cooling for new builds and established homes, zoned to how you live.", href: "/ducted-air-conditioning" },
+    { title: "Split systems", body: "For sheds, workshops, granny flats, studios and single rooms.", href: "/split-system-air-conditioning" },
+    { title: "Multi-head split systems", body: "Several rooms or a small outbuilding from one outdoor unit.", href: "/blog/multi-head-split-system" },
+    { title: "Evaporative to ducted", body: `Older homes on acreage often have evaporative — removal ${extraPrice(ductedExtras.evapRemoval)} including tile patching.`, href: "/evaporative-to-ducted-reverse-cycle" },
+  ]}
+  evapLead="Older homes on acreage around Serpentine, Oakford and Jarrahdale often still have an evaporative cooler. Ducted reverse cycle adds heating for cold country nights."
+  suburbGroups={[
+    { title: "Byford & new estates", suburbs: estates },
+    { title: "Acreage & rural", suburbs: rural },
+  ]}
+  tricky={{ title: "Building, or on acreage?", body: "Attach your builder's plans, or photos of the house and outbuildings, to a quote request and we'll design the right mix of ducted and split systems." }}
+  pricingLead="Guide prices for single-storey homes, inc GST. New builds can be priced straight from the builder's plans; acreage homes after a measure-up."
+  faqs={faqs}
+/>

@@ -1,0 +1,54 @@
+---
+import { Flame, Snowflake, Trees, Warehouse } from "@lucide/astro";
+import AreaPage from "@/components/AreaPage.astro";
+import { bandRange, ductedBands, ductedExtras, extraPrice, installTimes, type Faq } from "@/data/ducted";
+import heroImg from "@/assets/images/tech-van.webp";
+
+// TODO(owner): confirm the suburb list; add an eastern Hills project when there's one.
+const suburbs = [
+  "Mundaring", "Darlington", "Glen Forrest", "Greenmount", "Helena Valley", "Boya", "Hovea", "Swan View",
+  "Mahogany Creek", "Sawyers Valley", "Parkerville", "Stoneville", "Mount Helena", "Chidlow",
+];
+const [small, medium, large] = ductedBands;
+
+const faqs: Faq[] = [
+  { q: "Do you install air conditioning in Mundaring and the eastern Hills?", a: `Yes — we cover Mundaring and the surrounding eastern Hills, including ${suburbs.slice(1, 7).join(", ")} and nearby suburbs. Send us your suburb with a quote request and we'll confirm.` },
+  { q: "Can ducted reverse cycle replace my wood heater?", a: "For most homes, yes. A ducted reverse cycle system heats every room you choose at the touch of a button — no wood to cut, stack or clean up after — and cools the whole house in summer too. Some people keep the wood heater as a backup; it's up to you." },
+  { q: "Will reverse cycle keep up on cold eastern Hills nights?", a: "Yes. Modern inverter reverse cycle systems heat efficiently in Perth winter conditions, including the colder Hills nights. Getting the system sized correctly for your home matters most, which is why we measure up before quoting." },
+  { q: "My home is on a bush block — does that change the install?", a: "It can. We place the outdoor unit with clearance from vegetation and leaf litter, plan the pipe run carefully, and recommend reverse cycle over evaporative partly because it cools with the windows shut during smoke season." },
+  { q: "Can you also do a split system for a studio or granny flat?", a: "Yes. Split systems are ideal for studios, granny flats, home offices and workshops on larger Hills properties — see our split system prices for a guide." },
+];
+---
+
+<AreaPage
+  path="/air-conditioning-mundaring"
+  area="Mundaring"
+  breadcrumb="Mundaring & Eastern Hills"
+  seoTitle="Air Conditioning Mundaring & Eastern Hills | Pro Vent"
+  seoDescription="Ducted reverse cycle and split system air conditioning for Mundaring, Darlington, Glen Forrest, Parkerville and the eastern Perth Hills. Heating and cooling, one system."
+  eyebrow="Mundaring & the eastern Hills"
+  title="Air Conditioning Mundaring & the Eastern Hills"
+  lead="Reverse cycle heating and cooling for eastern Hills homes — warmth in every room through cold winter nights, cooling with the windows shut in smoke season, and installs planned around bush blocks and bigger properties."
+  heroImage={heroImg}
+  heroAlt="Pro Vent technician with tool bag beside the company van"
+  heroFocus="center 30%"
+  factorsTitle="Air conditioning for eastern Hills homes"
+  factorsLead="Out past Darlington and Glen Forrest, homes have different priorities to the suburbs below the scarp. Here's what shapes the right system."
+  factors={[
+    { icon: Snowflake, title: "Cold winter nights", body: "Winter nights in the eastern Hills are some of the coldest around Perth, so heating is often the bigger job. Ducted reverse cycle heats every room you choose, not just the one with the heater." },
+    { icon: Flame, title: "Swapping the wood heater", body: "Many eastern Hills homes still rely on a wood heater for one room. Reverse cycle warms the whole house at the push of a button — no wood to cut, stack or clean out." },
+    { icon: Trees, title: "Bush blocks and smoke", body: "On treed blocks we place the outdoor unit clear of vegetation and leaf litter. Reverse cycle also cools with the windows shut, which matters when bushfire smoke is around." },
+    { icon: Warehouse, title: "Bigger properties", body: "Larger homes, studios, granny flats and workshops — we plan ducted for the main house and split systems for the outbuildings, with sensible pipe and duct runs." },
+  ]}
+  services={[
+    { title: "Ducted reverse cycle", body: "Whole-home heating and cooling, zoned so you only heat or cool the rooms you're using.", href: "/ducted-air-conditioning" },
+    { title: "Evaporative to ducted", body: `Replace the old roof cooler with reverse cycle — removal ${extraPrice(ductedExtras.evapRemoval)} including tile patching.`, href: "/evaporative-to-ducted-reverse-cycle" },
+    { title: "Split systems", body: "For studios, granny flats, home offices and workshops on bigger blocks.", href: "/split-system-air-conditioning" },
+    { title: "Service & repairs", body: "Fault-finding and repairs on all brands, including older systems.", href: "/service-repairs" },
+  ]}
+  evapLead="Evaporative coolers struggle in smoke season and don't heat at all. Swapping to ducted reverse cycle covers both seasons from one system."
+  suburbGroups={[{ title: "Shire of Mundaring", suburbs }]}
+  tricky={{ title: "Bush block or bigger property?", body: "Send us photos of the house, roof space and where an outdoor unit could go — or your house plans — and we'll tell you what's possible." }}
+  pricingLead="A guide for single-storey homes, supplied and installed inc GST. Bigger rural-residential homes are priced from a measure-up, and add-ons like extra zones are itemised."
+  faqs={faqs}
+/>

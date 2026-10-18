@@ -1,0 +1,54 @@
+---
+import { Building2, Mountain, Snowflake, Wind } from "@lucide/astro";
+import AreaPage from "@/components/AreaPage.astro";
+import { bandRange, ductedBands, ductedExtras, extraPrice, installTimes, type Faq } from "@/data/ducted";
+import heroImg from "@/assets/images/banner-handover.webp";
+
+// TODO(owner): confirm the suburb list; add a Roleystone/Armadale project when there's one.
+const hills = ["Roleystone", "Karragullen", "Bedfordale", "Mount Nasura", "Mount Richon", "Kelmscott"];
+const armadale = ["Armadale", "Brookdale", "Seville Grove", "Haynes", "Hilbert", "Wungong", "Camillo", "Champion Lakes"];
+const [small, medium, large] = ductedBands;
+
+const faqs: Faq[] = [
+  { q: "Do you install air conditioning in Roleystone and Armadale?", a: "Yes — we cover Roleystone, Karragullen, Bedfordale and the Kelmscott hills, plus Armadale and the newer estates below the scarp. Send us your suburb with a quote request and we'll confirm." },
+  { q: "My home is on a steep block — can you still install ducted?", a: "Usually, yes. Steep and split-level blocks change where the outdoor unit can sit and how the ducts and pipes run, so we plan it on site. For heavier units or awkward spots we use a purpose-built installation hoist rather than risky shortcuts." },
+  { q: "Should I replace my evaporative cooler with reverse cycle?", a: `If you want heating as well as cooling, and cooling that works with the windows shut, yes. Removal is ${extraPrice(ductedExtras.evapRemoval)} including tile patching (metal roofs ${extraPrice(ductedExtras.roofSheets)}), and the whole changeover is ${installTimes.withEvapRemoval}.` },
+  { q: "I'm in a newer Armadale estate — is ducted easy to add?", a: "Newer homes usually have good roof access and straightforward ceilings, which makes ducted relatively simple to add after you've moved in. If you have the builder's plans, attach them to your quote request and we can price it accurately." },
+  { q: "Is reverse cycle heating enough for Roleystone winters?", a: "Yes. Modern inverter reverse cycle systems heat efficiently through Perth winters, including the cooler Hills nights, and ducted spreads that heat through every zone you have switched on." },
+];
+---
+
+<AreaPage
+  path="/air-conditioning-roleystone-armadale"
+  area="Roleystone & Armadale"
+  breadcrumb="Roleystone & Armadale Hills"
+  seoTitle="Air Conditioning Roleystone, Armadale & Kelmscott | Pro Vent"
+  seoDescription="Ducted reverse cycle and split system air conditioning for Roleystone, Bedfordale, Kelmscott, Armadale and the southern Perth Hills. Steep blocks and evaporative swaps."
+  eyebrow="Roleystone, Armadale & the southern Hills"
+  title="Air Conditioning Roleystone, Armadale & Kelmscott"
+  lead="From hillside homes in Roleystone and Bedfordale to newer estates in Armadale — ducted reverse cycle and split systems designed around steep blocks, older homes and the cooler Hills winters."
+  heroImage={heroImg}
+  heroAlt="Pro Vent technician handing over to a homeowner beside the work van"
+  factorsTitle="Air conditioning for the southern Hills"
+  factorsLead="The Armadale area runs from steep orchard-country Hills down to flat new estates, and the right system depends on which one you're in."
+  factors={[
+    { icon: Mountain, title: "Steep hillside blocks", body: "Roleystone, Bedfordale and the Kelmscott hills are full of sloping and split-level homes. We plan outdoor unit placement and access on site — and use a purpose-built hoist for heavy or awkward lifts." },
+    { icon: Snowflake, title: "Cooler Hills nights", body: "Up on the scarp it gets colder in winter than down on the plain, so reverse cycle heating earns its keep. Ducted warms every zone, not just the lounge room." },
+    { icon: Wind, title: "Lots of evaporative coolers", body: "Many older homes still run evaporative. Swapping to ducted reverse cycle adds winter heating and cooling that works on humid days and with the windows shut." },
+    { icon: Building2, title: "Newer estates below the scarp", body: "Newer Armadale homes usually have good roof access, which keeps a ducted retrofit straightforward. Builder's plans help us price it accurately." },
+  ]}
+  services={[
+    { title: "Ducted reverse cycle", body: "Whole-home heating and cooling, zoned to the way your household uses the house.", href: "/ducted-air-conditioning" },
+    { title: "Evaporative to ducted", body: `Swap the evaporative for reverse cycle — removal ${extraPrice(ductedExtras.evapRemoval)}, usually done in a day.`, href: "/evaporative-to-ducted-reverse-cycle" },
+    { title: "Split systems", body: "Quick, cost-effective cooling and heating for bedrooms and single rooms.", href: "/split-system-air-conditioning" },
+    { title: "Service & repairs", body: "Fault-finding and repairs on all brands, including older systems.", href: "/service-repairs" },
+  ]}
+  evapLead="Older homes through Roleystone, Kelmscott and Armadale often still have an evaporative cooler on the roof. Ducted reverse cycle adds heating and works with the house closed up."
+  suburbGroups={[
+    { title: "Roleystone & the southern Hills", suburbs: hills },
+    { title: "Armadale & surrounds", suburbs: armadale },
+  ]}
+  tricky={{ title: "Steep block or split-level home?", body: "Send us photos of the house and where the outdoor unit could go, or your house plans, and we'll work out the best approach." }}
+  pricingLead="Single-storey guide prices, inc GST. Steep-block access, split levels and double-storey homes are confirmed on site before we fix the price."
+  faqs={faqs}
+/>
