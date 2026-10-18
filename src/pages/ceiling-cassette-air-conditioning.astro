@@ -1,15 +1,16 @@
 ---
-import { ClipboardList, Phone } from "@lucide/astro";
+import { ArrowRight, Check, ClipboardList, Phone } from "@lucide/astro";
 import Layout from "@/layouts/Layout.astro";
 import PageHero from "@/components/sections/PageHero.astro";
 import FeatureSplit from "@/components/sections/FeatureSplit.astro";
-import BenefitGrid from "@/components/sections/BenefitGrid.astro";
+import SectionHeading from "@/components/sections/SectionHeading.astro";
 import HowWeWork from "@/components/sections/HowWeWork.astro";
 import BrandStrip from "@/components/sections/BrandStrip.astro";
-import SystemComparison from "@/components/sections/SystemComparison.astro";
+import GoogleReviews from "@/components/sections/GoogleReviews.astro";
 import FaqSection from "@/components/sections/FaqSection.astro";
 import QuoteBand from "@/components/sections/QuoteBand.astro";
 import LinkButton from "@/components/LinkButton.astro";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { business } from "@/data/site";
 import { faqSchema, type Faq } from "@/data/ducted";
 
@@ -18,22 +19,59 @@ import whyImg from "@/assets/images/tech-outdoor-unit-3.webp";
 
 // Pricing deliberately omitted until the owner confirms cassette prices —
 // the page sends people to a quote instead.
+
 const why = [
-  { title: "Sits flush in the ceiling", body: "Only a slim grille shows — nothing on the walls, which suits modern interiors and rooms with lots of glass." },
-  { title: "Even, multi-directional airflow", body: "Cassettes push air out in several directions from the centre of the room, so large spaces heat and cool more evenly than with a wall unit." },
-  { title: "Great for open-plan spaces", body: "Ideal for big living areas, alfresco-adjoining rooms, shops, offices and anywhere a wall unit would look out of place." },
+  { title: "Sits flush in the ceiling", body: "Only a slim grille shows — nothing on the walls, which suits modern interiors, feature walls and rooms with lots of glass." },
+  { title: "Even, multi-directional airflow", body: "A four-way cassette pushes air out in four directions from the centre of the room, so large spaces heat and cool more evenly than with a single wall unit." },
+  { title: "Great for open-plan and commercial spaces", body: "Ideal for big living areas, rooms opening onto an alfresco, shops, cafés and offices — anywhere a wall unit would look out of place or wouldn't reach." },
 ];
 
-const benefits = [
-  { title: "Discreet look", body: "Recessed into the ceiling with just a grille visible." },
-  { title: "Wide air throw", body: "Spreads air across the whole room instead of from one wall." },
-  { title: "Frees up wall space", body: "No unit on the wall above your furniture, art or windows." },
-  { title: "Heating and cooling", body: "Reverse cycle — one unit for summer and winter." },
+const types = [
+  {
+    title: "Four-way cassette",
+    body: "The most common type. Mounted near the centre of the ceiling, it throws air in four directions — the best choice for large, square-ish open-plan rooms.",
+  },
+  {
+    title: "One-way and two-way cassettes",
+    body: "Designed to sit closer to a wall or along a narrow room, blowing air across the space rather than out in every direction. Useful for long rooms and hallways.",
+  },
+  {
+    title: "Compact cassettes",
+    body: "A smaller body sized to fit a standard suspended-ceiling grid tile — popular in offices and shops with drop ceilings.",
+  },
+];
+
+const goodFor = [
+  "Large open-plan kitchen, living and dining areas",
+  "Rooms with floor-to-ceiling glass and no wall space for a split",
+  "Living areas that open onto an alfresco",
+  "Shops, cafés, salons and offices",
+  "Renovations where you want a clean, finished ceiling",
+  "Rooms where a wall unit would blow straight onto a seating area",
+];
+
+const checks = [
+  { title: "Ceiling cavity depth", body: "A cassette is recessed into the ceiling, so there needs to be enough depth in the roof space or ceiling cavity above the room to fit the unit." },
+  { title: "Joists and access", body: "The opening has to sit between ceiling joists (or the framing has to be adjusted), and we need access from the roof space to install it. We check this on site before quoting." },
+  { title: "Condensate drainage", body: "Cassettes produce condensation when cooling. The drain has to be planned so water is carried away properly — many models include a pump to lift it to a drain line." },
+  { title: "Outdoor unit and pipe run", body: "The refrigerant pipes run from the cassette through the roof space to the outdoor unit, so we plan where the outdoor unit goes and how the pipes get there." },
+  { title: "Power", body: "Larger cassettes may need their own circuit from the switchboard. We check your switchboard as part of the quote." },
+];
+
+const compare: { label: string; cassette: string; split: string; ducted: string }[] = [
+  { label: "What you see", cassette: "A grille in the ceiling", split: "A unit on the wall", ducted: "Slim vents in each room" },
+  { label: "Rooms covered", cassette: "One large space", split: "One room", ducted: "The whole home, zoned" },
+  { label: "Air distribution", cassette: "Multi-directional from the ceiling", split: "From one wall", ducted: "From vents in every room" },
+  { label: "Needs ceiling space", cassette: "Yes", split: "No", ducted: "Yes (roof space for ducts)" },
+  { label: "Relative cost", cassette: "More than a wall split", split: "Lowest", ducted: "Highest" },
+  { label: "Best for", cassette: "Big open-plan rooms, shops, offices", split: "Bedrooms and smaller rooms", ducted: "Whole-of-house comfort" },
 ];
 
 const faqs: Faq[] = [
-  { q: "How much does a ceiling cassette air conditioner cost?", a: "It depends on the size of the unit, the ceiling space and the pipe run to the outdoor unit. Cassettes generally cost more than an equivalent wall-mounted split system because of the extra ceiling work. Send us the room details and we'll give you a fixed written quote." },
-  { q: "Do I need ceiling space for a cassette?", a: "Yes. A cassette is recessed into the ceiling, so it needs enough clearance in the roof or ceiling cavity above the room. We check this when we measure up." },
+  { q: "How much does a ceiling cassette air conditioner cost?", a: "It depends on the size of the unit, the ceiling space and the pipe run to the outdoor unit. Cassettes generally cost more than an equivalent wall-mounted split system because of the extra ceiling work. Send us the room size and a photo of the space and we'll give you a fixed written quote." },
+  { q: "Do I need ceiling space for a cassette?", a: "Yes. A cassette is recessed into the ceiling, so it needs enough depth in the cavity above the room, plus access from the roof space to install it. We check this when we measure up." },
+  { q: "Can a cassette go in a house, or is it only for offices?", a: "Both. Cassettes are common in shops and offices, but they work well in homes too — especially big open-plan living areas or rooms with lots of glass where there's no good wall for a split system." },
+  { q: "Are ceiling cassettes noisy?", a: "No more than a wall split. The compressor is in the outdoor unit, so inside you mainly hear the fan. Because air comes from the ceiling, you're also less likely to feel a draught blowing straight at you." },
   { q: "Cassette or ducted — which is better?", a: "A cassette heats and cools one space, like a large living area or a shop. Ducted air conditioning does the whole home through multiple zones. If you want several rooms done, ducted is usually the better fit." },
   { q: "Cassette or wall split system?", a: "A wall split is cheaper and simpler to install. A cassette looks cleaner and spreads air more evenly across a large room. For big open-plan spaces where looks matter, a cassette is often worth it." },
 ];
@@ -63,30 +101,107 @@ const service = {
     focus="70% center"
   />
 
-  <FeatureSplit eyebrow="Why a cassette" title="Why choose a ceiling cassette?" items={why} image={whyImg} imageAlt="Pro Vent technician installing an outdoor unit beside a Perth home" />
+  <section class="py-16 sm:py-24">
+    <div class="container-page grid gap-10 lg:grid-cols-[3fr_2fr] lg:gap-16">
+      <div>
+        <SectionHeading eyebrow="What is a cassette?" title="What is a ceiling cassette air conditioner?" />
+        <div class="mt-5 space-y-4 text-lg leading-relaxed text-muted-foreground">
+          <p>A ceiling cassette is a type of split system air conditioner where the indoor unit is <strong class="text-foreground">recessed into the ceiling</strong> instead of mounted on a wall. All you see from the room is a square or rectangular grille.</p>
+          <p>Like a wall split, it's connected to an outdoor unit by refrigerant pipes — but the pipes run through the roof space, and the cassette pushes conditioned air out from the ceiling in several directions at once.</p>
+          <p>It's reverse cycle, so it heats in winter as well as cooling in summer.</p>
+        </div>
+      </div>
+      <aside class="self-start rounded-2xl bg-muted p-6 sm:p-8">
+        <h2 class="text-xl font-bold">A cassette is a great fit for…</h2>
+        <ul class="mt-4 space-y-3">
+          {goodFor.map((g) => <li class="flex gap-3"><Check class="mt-1 size-4 shrink-0 text-brand-dark" stroke-width={3} />{g}</li>)}
+        </ul>
+      </aside>
+    </div>
+  </section>
 
-  <BenefitGrid eyebrow="Benefits" title="Benefits of ceiling cassette air conditioners" items={benefits} />
+  <FeatureSplit muted eyebrow="Why a cassette" title="Why choose a ceiling cassette?" items={why} image={whyImg} imageAlt="Pro Vent technician installing an outdoor unit beside a Perth home" />
 
-  <section class="py-14 sm:py-16">
+  <section class="py-16 sm:py-24">
+    <div class="container-page">
+      <SectionHeading eyebrow="Types" title="Types of ceiling cassette" lead="The right cassette depends on the shape of the room and the ceiling it's going into." />
+      <div class="mt-10 grid gap-4 md:grid-cols-3">
+        {types.map((t) => (
+          <div class="rounded-2xl border bg-card p-6">
+            <h3 class="text-lg font-semibold">{t.title}</h3>
+            <p class="mt-2 leading-relaxed text-muted-foreground">{t.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-ink py-16 text-white sm:py-24">
+    <div class="container-page">
+      <SectionHeading tone="dark" eyebrow="Before you install" title="What we check before installing a cassette" lead="Every cassette install depends on the ceiling above it. These are the things we look at when we measure up." />
+      <ol class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+        {checks.map((c, i) => (
+          <li class="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <span class="flex size-9 items-center justify-center rounded-full bg-brand font-display font-bold text-ink">{i + 1}</span>
+            <h3 class="mt-4 font-semibold text-white">{c.title}</h3>
+            <p class="mt-1.5 text-sm leading-relaxed text-ink-muted">{c.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="py-16 sm:py-24">
+    <div class="container-page">
+      <SectionHeading eyebrow="Compare" title="Cassette vs wall split vs ducted" align="center" />
+      <div class="mt-10 overflow-hidden rounded-2xl border bg-card">
+        <Table className="min-w-[640px]">
+          <TableHeader>
+            <TableRow className="bg-muted/60 hover:bg-muted/60">
+              <TableHead className="w-[22%] py-4 pl-5 font-semibold">&nbsp;</TableHead>
+              <TableHead className="py-4 font-semibold text-foreground">Ceiling cassette</TableHead>
+              <TableHead className="py-4 font-semibold text-foreground"><a href="/split-system-air-conditioning" class="hover:text-brand-dark">Wall split system</a></TableHead>
+              <TableHead className="py-4 font-semibold text-foreground"><a href="/ducted-air-conditioning" class="hover:text-brand-dark">Ducted</a></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {compare.map((r) => (
+              <TableRow>
+                <TableHead scope="row" className="h-auto py-4 pl-5 font-medium whitespace-normal text-foreground">{r.label}</TableHead>
+                <TableCell className="py-4 whitespace-normal">{r.cassette}</TableCell>
+                <TableCell className="py-4 whitespace-normal">{r.split}</TableCell>
+                <TableCell className="py-4 whitespace-normal">{r.ducted}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      <p class="mt-4 text-center text-sm text-muted-foreground">
+        Weighing it up? Read our <a href="/blog/ducted-vs-split-system" class="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4">ducted vs split system guide</a> or see <a href="/blog/split-system-installation-cost-perth" class="font-medium text-foreground underline decoration-brand decoration-2 underline-offset-4">split system prices</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-16 sm:pb-24">
     <div class="container-page">
       <div class="flex flex-col gap-6 rounded-2xl border bg-card p-6 shadow-sm sm:p-8 lg:flex-row lg:items-center lg:justify-between">
         <div class="flex gap-4">
           <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-accent text-brand-dark"><ClipboardList class="size-6" /></span>
           <div>
             <h2 class="text-xl font-bold">Ceiling cassette pricing</h2>
-            <p class="mt-1 max-w-2xl text-muted-foreground">Cassette prices depend on the unit size, the ceiling space and the pipe run to the outdoor unit, so we price every job individually. Send us the room size and a photo of the space and we'll come back with a fixed written quote.</p>
+            <p class="mt-1 max-w-2xl text-muted-foreground">Cassette prices depend on the unit size, the ceiling space and the pipe run to the outdoor unit, so we price every job individually. Send us the room size and a photo of the space (you can attach it to the quote form) and we'll come back with a fixed written quote.</p>
           </div>
         </div>
         <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
-          <LinkButton href="/request-a-quote" size="xl">Get a cassette quote</LinkButton>
+          <LinkButton href="/request-a-quote" size="xl">Get a cassette quote <ArrowRight class="size-4" /></LinkButton>
           <LinkButton href={business.phoneHref} size="xl" variant="outline"><Phone class="size-4" />{business.phone}</LinkButton>
         </div>
       </div>
     </div>
   </section>
 
-  <SystemComparison />
   <HowWeWork />
+  <GoogleReviews limit={4} />
   <BrandStrip />
   <FaqSection title="Ceiling cassette FAQs" faqs={faqs} muted />
   <QuoteBand />
