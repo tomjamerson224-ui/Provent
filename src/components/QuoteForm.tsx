@@ -27,6 +27,11 @@ const homeSizeOptions = [
   { value: "Double storey", label: "Double storey" },
 ];
 
+const planOptions = [
+  { value: "yes", label: "I have house plans" },
+  { value: "no", label: "I don't have house plans" },
+];
+
 const evapOptions = [
   { value: "Yes", label: "Yes — remove it" },
   { value: "No", label: "No" },
@@ -52,6 +57,7 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
   const ducted = source === "ducted";
   const [help, setHelp] = useState(source === "quote" ? "quote" : ducted ? "installation" : "");
+  const [plans, setPlans] = useState("");
   const [homeSize, setHomeSize] = useState("");
   const [evap, setEvap] = useState("");
   const [files, setFiles] = useState<File[]>([]);
@@ -59,6 +65,14 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
   async function onSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
+    if (ducted && !plans) {
+      toast.error("Do you have house plans?", { description: "Pick one of the house plans options so we know how to price your home." });
+      return;
+    }
+    if (ducted && plans === "no" && !homeSize) {
+      toast.error("Pick your home size", { description: "Choose the option closest to your home so we can price it." });
+      return;
+    }
     // Multipart so attachments go up with the text fields; the browser sets
     // the boundary header itself.
     const body = new FormData(form);
@@ -66,7 +80,9 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
     files.forEach((f) => body.append("files", f, f.name));
     body.set("help", help);
     if (ducted) {
-      body.set("homeSize", homeSize);
+      body.set("plans", plans);
+      body.set("homeSize", plans === "no" ? homeSize : "");
+      if (plans !== "no") body.delete("address");
       body.set("evap", evap);
     }
     body.set("source", source);
@@ -81,6 +97,9 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
       setStatus("sent");
       form.reset();
       setFiles([]);
+      setPlans("");
+      setHomeSize("");
+      setEvap("");
     } catch (err) {
       setStatus("idle");
       toast.error("Your request didn't send", {
@@ -120,18 +139,43 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
               <Input id={`${source}-phone`} name="phone" type="tel" autoComplete="tel" inputMode="tel" required className="h-11" />
             </Field>
             <Field>
-              <FieldLabel htmlFor={`${source}-email`}>{ducted ? "Email (optional)" : "Email *"}</FieldLabel>
-              <Input id={`${source}-email`} name="email" type="email" autoComplete="email" required={!ducted} className="h-11" />
+              <FieldLabel htmlFor={`${source}-email`}>Email *</FieldLabel>
+              <Input id={`${source}-email`} name="email" type="email" autoComplete="email" required className="h-11" />
             </Field>
             <Field>
-              <FieldLabel htmlFor={`${source}-suburb`}>Suburb</FieldLabel>
-              <Input id={`${source}-suburb`} name="suburb" autoComplete="address-level2" className="h-11" />
+              <FieldLabel htmlFor={`${source}-suburb`}>{ducted ? "Suburb *" : "Suburb"}</FieldLabel>
+              <Input id={`${source}-suburb`} name="suburb" autoComplete="address-level2" required={ducted} className="h-11" />
             </Field>
           </div>
 
           {ducted ? (
             <>
-              <ChoiceGroup legend="Home size" name={`${source}-size`} value={homeSize} onChange={setHomeSize} options={homeSizeOptions} cols="sm:grid-cols-4" />
+              <ChoiceGroup legend="House plans *" name={`${source}-plans`} value={plans} onChange={setPlans} options={planOptions} cols="sm:grid-cols-2" />
+
+              {plans === "yes" && (
+                <Field>
+                  <FieldLabel htmlFor={`${source}-files`}>Attach your house plans</FieldLabel>
+                  <FileDrop
+                    id={`${source}-files`}
+                    files={files}
+                    onChange={setFiles}
+                    onReject={(message) => toast.error("File not added", { description: message })}
+                  />
+                  <FieldDescription>No file handy? Send the form now and email the plans to us later.</FieldDescription>
+                </Field>
+              )}
+
+              {plans === "no" && (
+                <div className="flex flex-col gap-5 rounded-xl border border-dashed p-4">
+                  <ChoiceGroup legend="Home size *" name={`${source}-size`} value={homeSize} onChange={setHomeSize} options={homeSizeOptions} cols="sm:grid-cols-4" />
+                  <Field>
+                    <FieldLabel htmlFor={`${source}-address`}>Property address (optional)</FieldLabel>
+                    <Input id={`${source}-address`} name="address" autoComplete="street-address" className="h-11" />
+                    <FieldDescription>Plans are sometimes available online — if you let us know the property address, we can check.</FieldDescription>
+                  </Field>
+                </div>
+              )}
+
               <ChoiceGroup legend="Replacing an evaporative cooler?" name={`${source}-evap`} value={evap} onChange={setEvap} options={evapOptions} cols="sm:grid-cols-2" />
             </>
           ) : (
@@ -163,16 +207,18 @@ export default function QuoteForm({ source, phone, phoneHref }: Props) {
             {!ducted && <FieldDescription>We reply to every request as quickly as we can.</FieldDescription>}
           </Field>
 
-          <Field>
-            <FieldLabel htmlFor={`${source}-files`}>House plans or photos (optional)</FieldLabel>
-            <FileDrop
-              id={`${source}-files`}
-              files={files}
-              onChange={setFiles}
-              onReject={(message) => toast.error("File not added", { description: message })}
-            />
-            <FieldDescription>Floor plans help us size and price your system accurately.</FieldDescription>
-          </Field>
+          {!ducted && (
+            <Field>
+              <FieldLabel htmlFor={`${source}-files`}>House plans or photos (optional)</FieldLabel>
+              <FileDrop
+                id={`${source}-files`}
+                files={files}
+                onChange={setFiles}
+                onReject={(message) => toast.error("File not added", { description: message })}
+              />
+              <FieldDescription>Floor plans help us size and price your system accurately.</FieldDescription>
+            </Field>
+          )}
 
           {/* Honeypot — real people never see or fill this. */}
           <div aria-hidden="true" className="absolute -left-[9999px] h-0 overflow-hidden">

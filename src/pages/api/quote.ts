@@ -91,15 +91,21 @@ export const POST: APIRoute = async ({ request }) => {
   const message = clean(data.message, 5000);
   const sourceKey = clean(data.source, 20);
   const source = sourceKey === "contact" ? "Contact form" : sourceKey === "ducted" ? "Ducted quote (ads landing page)" : "Quote request";
+  const plans = clean(data.plans, 5);
   const homeSize = clean(data.homeSize, 40);
+  const address = clean(data.address, 200);
   const evap = clean(data.evap, 10);
   const page = clean(data.page, 200);
 
-  // Email is optional on the ads landing page (phone is what matters there),
-  // but must be valid whenever it's given.
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  if (!name || !phone || (email ? !emailOk : sourceKey !== "ducted")) {
+  if (!name || !phone || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return json({ error: "Please fill in your name, phone and a valid email." }, 422);
+  }
+  // The ducted landing-page form also needs a suburb, the house-plans answer,
+  // and a home size when there are no plans.
+  if (sourceKey === "ducted") {
+    if (!suburb) return json({ error: "Please add your suburb." }, 422);
+    if (plans !== "yes" && plans !== "no") return json({ error: "Please let us know if you have house plans." }, 422);
+    if (plans === "no" && !homeSize) return json({ error: "Please choose your home size." }, 422);
   }
 
   if (files.length > MAX_FILES) return json({ error: `Please attach up to ${MAX_FILES} files.` }, 422);
@@ -154,7 +160,9 @@ export const POST: APIRoute = async ({ request }) => {
     ["Email", email || "—"],
     ["Suburb", suburb || "—"],
     ["Needs help with", help],
+    ...(plans ? ([["House plans", plans === "yes" ? (files.length ? "Yes — attached" : "Yes — not attached yet (follow up)") : "No"]] as [string, string][]) : []),
     ...(homeSize ? ([["Home size", homeSize]] as [string, string][]) : []),
+    ...(address ? ([["Property address", `${address} (check online for plans)`]] as [string, string][]) : []),
     ...(evap ? ([["Replacing evaporative", evap]] as [string, string][]) : []),
     ["Message", message || "—"],
     ["Attachments", files.length ? files.map((f) => `${safeFilename(f.name)} (${formatBytes(f.size)})`).join(", ") : "—"],
