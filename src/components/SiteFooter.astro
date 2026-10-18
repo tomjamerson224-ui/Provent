@@ -40,7 +40,7 @@ const year = new Date().getFullYear();
         <li><a href={business.phoneHref} class="flex items-center gap-2.5 text-lg font-semibold text-white hover:text-brand"><Phone class="size-4 text-brand" />{business.phone}</a></li>
         <li><a href={business.emailHref} class="flex items-center gap-2.5 break-all hover:text-brand"><Mail class="size-4 shrink-0 text-brand" />{business.email}</a></li>
         <li class="flex items-center gap-2.5"><ShieldCheck class="size-4 shrink-0 text-brand" />ARCtick licence {business.arctick}</li>
-        <li class="flex items-center gap-2.5"><MapPin class="size-4 shrink-0 text-brand" />{business.area}</li>
+        <li class="flex items-center gap-2.5"><MapPin class="size-4 shrink-0 text-brand" /><a href="/air-conditioning-kalamunda" class="hover:text-brand">{business.area}</a></li>
       </ul>
     </div>
   </div>

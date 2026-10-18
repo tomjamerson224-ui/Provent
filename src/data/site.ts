@@ -123,6 +123,7 @@ export const footerLinks = [
   { title: "Ducted Cost Guide", href: "/ducted-air-conditioning-cost" },
   { title: "Evaporative to Ducted", href: "/evaporative-to-ducted-reverse-cycle" },
   { title: "Ceiling Cassettes", href: "/ceiling-cassette-air-conditioning" },
+  { title: "Kalamunda & Perth Hills", href: "/air-conditioning-kalamunda" },
   { title: "Supply & Install", href: "/supply-install" },
   { title: "Service & Repairs", href: "/service-repairs" },
   { title: "Guides & Advice", href: "/blog" },
